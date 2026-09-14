@@ -1,0 +1,1 @@
+const mainDiv = document.getElementById("id");
