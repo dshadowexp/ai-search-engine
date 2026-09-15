@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "node --watch ./src/main.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [],
   "type": "module",
@@ -13,5 +13,13 @@
     "@types/node": "^26.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "puppeteer": "^25.11.0",
+    "robots-parser": "^3.0.1"
+  },
+  "allowScripts": {
+    "puppeteer@25.11.0": true
   }
 }

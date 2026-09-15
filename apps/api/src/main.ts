@@ -1,11 +1,5 @@
-import { createServer } from "node:http";
+import server from "./http/main.ts";
 
-const PORT = process.env.PORT || 3000;
-
-const server = createServer((req, res) => {
-
-});
-
-server.listen(PORT, () => {
-    console.log(`APP is listening on localhost:${PORT}`)
-});
+server.listen(3030, () => {
+    console.log("server is listening on localhost:3030")
+})
