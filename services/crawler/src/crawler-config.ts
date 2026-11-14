@@ -1,4 +1,4 @@
-import type { NetworkPolicy } from "./http-fetch/http-client.js";
+import type { NetworkPolicy } from "./http-fetch/http-client.ts";
 import { ContentKind } from "./types.ts";
 
 export interface CrawlerConfig {

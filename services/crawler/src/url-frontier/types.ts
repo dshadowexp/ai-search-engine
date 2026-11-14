@@ -1,4 +1,4 @@
-import { AddOptions, AddResult, CrawlResult } from "../types.ts";
+import type { AddOptions, AddResult, CrawlResult } from "../types.ts";
 
 /**
  * 

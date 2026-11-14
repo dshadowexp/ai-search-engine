@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { FrontierEntry, Lease } from "../types.js";
-import { PriorityQueue } from "../scheduling/priority-queue.js";
+import { PriorityQueue } from "@search/shared";
 
 interface Expiry {
     entryId: string;
@@ -16,8 +16,11 @@ interface Expiry {
 export class LeaseManager {
     private readonly active = new Map<string, Lease>();
     private readonly expiries = new PriorityQueue<Expiry>((a, b) => a.expiresAt < b.expiresAt);
+    private readonly ttlMs: number;
 
-    constructor(private readonly ttlMs: number) {}
+    constructor(ttlMs: number) {
+        this.ttlMs = ttlMs;
+    }
 
     get size(): number {
         return this.active.size;
@@ -25,13 +28,14 @@ export class LeaseManager {
 
     grant(entry: FrontierEntry, workerId: string, now: number): Lease {
         const lease: Lease = {
-        entryId: entry.id,
-        url: entry.canonicalUrl,
-        hostId: entry.hostId,
-        workerId,
-        token: randomUUID(),
-        expiresAt: now + this.ttlMs,
-        attempt: entry.attempts,
+            entryId: entry.id,
+            url: entry.canonicalUrl,
+            hostId: entry.hostId,
+            workerId,
+            token: randomUUID(),
+            expiresAt: now + this.ttlMs,
+            attempt: entry.attempts,
+            depth: entry.depth,
         };
         this.active.set(entry.id, lease);
         this.expiries.push({ entryId: entry.id, token: lease.token, expiresAt: lease.expiresAt });

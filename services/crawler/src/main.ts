@@ -5,7 +5,7 @@
 import { CrawlerConfig, resolveCrawlerConfig } from "./crawler-config.ts";
 import { Crawler } from "./crawler.ts";
 import { HttpClient, UndiciHttpClient } from "./http-fetch/http-client.ts";
-import { DocumentStore, InMemoryDocumentStore } from "./infrastructure/document-store.ts";
+import { type DocumentStore, InMemoryDocumentStore } from "@search/shared";
 import { HtmlProcessor } from "./processor/html-parser.ts";
 import { DocumentProcessor } from "./types.ts";
 import { Frontier, FrontierConfig } from "./url-frontier/frontier.ts";

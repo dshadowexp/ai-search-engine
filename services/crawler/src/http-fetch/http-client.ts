@@ -2,11 +2,9 @@ import { lookup as dnsLookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import type { ReadableStream } from "node:stream/web";
 import { Agent, fetch as undiciFetch } from "undici";
-
-import type { HttpResponse, ResponseHead } from "../types.js";
+import { isPublicIp } from "@search/utils";
+import type { HttpResponse, ResponseHead } from "../types.ts";
 import { BlockedAddressError, FetchError } from "../errors.ts";
-import { isPublicIp } from "../utils/ssrf-guard.ts";
-
 
 export interface NetworkPolicy {
     /** hostname -> addresses. Default: the system resolver. */
@@ -73,8 +71,10 @@ export class UndiciHttpClient implements HttpClient {
     private readonly agent: Agent;
     private readonly allowed: (ip: string) => boolean;
     private readonly headers: Record<string, string>;
+    private readonly cfg: HttpClientConfig;
 
-    constructor(private readonly cfg: HttpClientConfig) {
+    constructor(cfg: HttpClientConfig) {
+        this.cfg = cfg;
         const resolve = cfg.network?.resolve ?? (async (host: string) => (await dnsLookup(host, { all: true, verbatim: true })).map((a) => a.address));
         
         this.allowed = cfg.network?.isAddressAllowed ?? isPublicIp;

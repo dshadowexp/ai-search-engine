@@ -1,5 +1,5 @@
-import type { CrawlResult } from "../types.js";
-import type { HttpResponse } from "../types.js";
+import type { CrawlResult } from "../types.ts";
+import type { HttpResponse } from "../types.ts";
 
 export type Classification =
     /** A 2xx with content: carry on to validation and processing. */

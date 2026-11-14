@@ -97,11 +97,19 @@ export function parseRobotsTxt(text: string, userAgent: string): RobotsRules {
 }
 
 export class HttpRobotsPolicy implements RobotsPolicy {
+    private readonly userAgent: string;
+    private readonly fetchImpl: typeof fetch;
+    private readonly timeoutMs: number;
+
     constructor(
-        private readonly userAgent: string,
-        private readonly fetchImpl: typeof fetch = fetch,
-        private readonly timeoutMs = 10_000,
-    ) {}
+        userAgent: string,
+        fetchImpl: typeof fetch = fetch,
+        timeoutMs = 10_000,
+    ) {
+        this.userAgent = userAgent;
+        this.fetchImpl = fetchImpl;
+        this.timeoutMs = timeoutMs;
+    }
 
     async load(origin: string): Promise<RobotsRules> {
         let url = `${origin}/robots.txt`;

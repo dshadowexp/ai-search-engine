@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import type { DocumentProcessor, ProcessedPage, ProcessInput } from "../types.js";
+import type { DocumentProcessor, ProcessedPage, ProcessInput } from "../types.ts";
 import { extractDocument } from "./extract-document.ts";
 import { extractLinks } from "./extract-links.ts";
 
@@ -12,7 +12,11 @@ export interface HtmlProcessorConfig {
 
 /** Parses once, then derives two independent outputs: links for the frontier, a document for the index. */
 export class HtmlProcessor implements DocumentProcessor {
-    constructor(private readonly cfg: HtmlProcessorConfig) {}
+    private readonly cfg: HtmlProcessorConfig;
+
+    constructor(cfg: HtmlProcessorConfig) {
+        this.cfg = cfg;
+    }
 
     process(input: ProcessInput): ProcessedPage {
         const $ = cheerio.load(input.html);

@@ -1,12 +1,13 @@
 import { type Lease, type URLFrontier } from "./url-frontier/types.ts";
-import type { ResolvedCrawlerConfig } from "./crawler-config.js";
-import { type HttpClient } from "./http-fetch/http-client.js";
-import { classifyResponse } from "./http-fetch/response-classifier.js";
-import { detectContentKind, validateContent } from "./processor/content-detector.js";
-import { decodeBody } from "./processor/decode-body.js";
-import type { CrawledDocument, CrawlerStats, CrawlResult, DocumentProcessor, ResponseHead } from "./types.js";
-import { DocumentStore } from "./infrastructure/document-store.ts";
-import { sleep } from "./utils/sleep.ts";
+import type { ResolvedCrawlerConfig } from "./crawler-config.ts";
+import { type HttpClient } from "./http-fetch/http-client.ts";
+import { classifyResponse } from "./http-fetch/response-classifier.ts";
+import { detectContentKind, validateContent } from "./processor/content-detector.ts";
+import { decodeBody } from "./processor/decode-body.ts";
+import type { CrawledDocument } from "@search/types";
+import type {CrawlerStats, CrawlResult, DocumentProcessor, ResponseHead } from "./types.ts";
+import { type DocumentStore } from "@search/shared";
+import { sleep } from "@search/utils";
 import { FetchError } from "./errors.ts";
 import { StaleLeaseError } from "./url-frontier/errors.ts";
 
@@ -40,12 +41,22 @@ const MIN_HEARTBEAT_MS = 10;
  * concurrency and crawl delay, retry/backoff, deduplication and admission of discovered links.
  */
 export class CrawlerWorker {
+    private readonly deps: CrawlerDependencies;
+    private readonly config: ResolvedCrawlerConfig;
+    readonly workerId: string;
+    private readonly stats: CrawlerStats;
+
     constructor(
-        private readonly deps: CrawlerDependencies,
-        private readonly config: ResolvedCrawlerConfig,
-        readonly workerId: string,
-        private readonly stats: CrawlerStats,
-    ) {}
+        deps: CrawlerDependencies,
+        config: ResolvedCrawlerConfig,
+        workerId: string,
+        stats: CrawlerStats,
+    ) {
+        this.deps = deps;
+        this.config = config;
+        this.workerId = workerId;
+        this.stats = stats;
+    }
 
     async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {

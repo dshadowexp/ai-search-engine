@@ -6,7 +6,7 @@
         "lib":                         ["ESNext"],
         "strict":                      true,
         "exactOptionalPropertyTypes":  true,
-        "noUncheckedIndexedAccess":    true,
+        "noUncheckedIndexedAccess":    false,
         "declaration":                 true,
         "declarationMap":              true,
         "sourceMap":                   true,

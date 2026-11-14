@@ -1,10 +1,15 @@
 export class LeaseReaper {
     private timer?: NodeJS.Timeout | undefined;
+    private readonly frontier: { reapExpiredLeases(): number };
+    private readonly intervalMs: number;
 
     constructor(
-        private readonly frontier: { reapExpiredLeases(): number },
-        private readonly intervalMs = 5_000,
-    ) {}
+        frontier: { reapExpiredLeases(): number },
+        intervalMs = 5_000,
+    ) {
+        this.frontier = frontier;
+        this.intervalMs = intervalMs;
+    }
 
     start(): void {
         if (this.timer) return;

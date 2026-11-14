@@ -13,11 +13,16 @@ export class HostManager {
     private readonly hosts = new Map<string, HostRecord>();
     private readonly queues = new Map<string, HostQueue>();
     private readonly rules = new Map<string, RobotsRules>();
+    private readonly defaults: HostDefaults;
+    private readonly onPromote: (entry: FrontierEntry) => void;
 
     constructor(
-        private readonly defaults: HostDefaults,
-        private readonly onPromote: (entry: FrontierEntry) => void,
-    ) {}
+        defaults: HostDefaults,
+        onPromote: (entry: FrontierEntry) => void,
+    ) {
+        this.defaults = defaults;
+        this.onPromote = onPromote;
+    }
 
     get size(): number {
         return this.hosts.size;

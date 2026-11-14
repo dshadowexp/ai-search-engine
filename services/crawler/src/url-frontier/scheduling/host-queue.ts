@@ -1,5 +1,5 @@
 import type { FrontierEntry } from "../types.js";
-import { PriorityQueue } from "./priority-queue.js";
+import { PriorityQueue } from "@search/shared";
 
 interface Slot {
     entry: FrontierEntry;
@@ -20,8 +20,11 @@ export class HostQueue {
             return a.entry.nextAttemptAt < b.entry.nextAttemptAt;
         return a.seq < b.seq;
     });
+    private readonly onPromote: ((entry: FrontierEntry) => void) | undefined;
 
-    constructor(private readonly onPromote?: (entry: FrontierEntry) => void) {}
+    constructor(onPromote?: (entry: FrontierEntry) => void) {
+        this.onPromote = onPromote;
+    }
 
     get size(): number {
         return this.ready.size + this.delayed.size;

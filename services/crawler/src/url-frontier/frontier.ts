@@ -2,7 +2,7 @@ import { errorText, StaleLeaseError } from "./errors.ts";
 import { InMemoryFrontierStore } from "./frontier-store.ts";
 import { HostManager } from "./host/host-manager.ts";
 import { LeaseManager } from "./leasing/lease-manager.ts";
-import { isPublicHostname } from "../utils/ssrf-guard.ts";
+import { isPublicHostname, type NormalizeOptions, normalizeUrl, hashUrl } from "@search/utils";
 import { RetryPolicy, type RetryPolicyConfig } from "./policies/retry-policy.ts";
 import { HostScheduler } from "./scheduling/host-scheduler.ts";
 import { nextEligibleAt } from "./scheduling/scheduler-policy.ts";
@@ -17,9 +17,7 @@ import type {
     Lease, 
     URLFrontier 
 } from "./types.ts";
-import { NormalizeOptions, normalizeUrl } from "../utils/normalize-url.ts";
-import { AddOptions, AddResult, CrawlResult } from "../types.ts";
-import { hashUrl } from "../utils/url-hash.ts";
+import type { AddOptions, AddResult, CrawlResult } from "../types.ts";
 
 export interface FrontierConfig {
     /** Injectable clock (ms). Makes every time-based rule testable. */

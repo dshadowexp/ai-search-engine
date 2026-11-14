@@ -1,5 +1,5 @@
 import { AddOptions, AddResult, CrawlerStats } from "./types.ts";
-import { sleep } from "./utils/sleep.ts";
+import { sleep } from "@search/utils";
 import { resolveCrawlerConfig, type CrawlerConfig, type ResolvedCrawlerConfig } from "./crawler-config.ts";
 import { CrawlerDependencies, CrawlerWorker } from "./worker.ts";
 
@@ -21,11 +21,13 @@ export class Crawler {
     };
     private controller?: AbortController | undefined;
     private running: Promise<void>[] = [];
+    private readonly deps: CrawlerDependencies;
 
     constructor(
-        private readonly deps: CrawlerDependencies,
+        deps: CrawlerDependencies,
         config: CrawlerConfig,
     ) {
+        this.deps = deps;
         this.config = resolveCrawlerConfig(config);
     }
 

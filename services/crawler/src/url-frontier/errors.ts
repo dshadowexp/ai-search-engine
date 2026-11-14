@@ -1,4 +1,4 @@
-import { CrawlResult } from "../types.ts";
+import type { CrawlResult } from "../types.ts";
 import type { Lease } from "./types.ts";
 
 export class StaleLeaseError extends Error {

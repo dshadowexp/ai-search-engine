@@ -1,4 +1,4 @@
-import { PriorityQueue } from "./priority-queue.js";
+import { PriorityQueue } from "@search/shared";
 
 interface Slot {
     hostId: string;

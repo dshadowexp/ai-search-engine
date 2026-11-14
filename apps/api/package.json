@@ -1,5 +1,5 @@
 {
-  "name": "search_engine",
+  "name": "@search/api",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -11,14 +11,5 @@
     "build:proto": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "keywords": [],
-  "type": "module",
-  "devDependencies": {
-    "@types/node": "^26.5.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^7.0.2"
-  },
-  "dependencies": {
-    "@grpc/grpc-js": "^1.14.7",
-    "@grpc/proto-loader": "^0.8.1"
-  }
+  "type": "module"
 }
