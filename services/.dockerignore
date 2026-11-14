@@ -1,0 +1,43 @@
+
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+**/node_modules
+**/.venv
+**/venv
+__pycache__
+
+# Build output
+**/dist
+**/.next
+**/build
+**/.turbo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Python
+*.pyc
+.pytest_cache
+.mypy_cache
+
+# Temporary files
+tmp/
+temp/
+coverage/

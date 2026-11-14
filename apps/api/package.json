@@ -5,10 +5,9 @@
   "main": "main.js",
   "scripts": {
     "dev": "node --watch ./src/app.ts",
-    "build": "",
-    "start": "",
-    "test": "node --test",
-    "build:proto": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "node --test"
   },
   "keywords": [],
   "type": "module"
