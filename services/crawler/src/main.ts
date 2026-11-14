@@ -33,7 +33,6 @@ import { HttpRobotsPolicy } from "./url-frontier/policies/robots-policy.ts";
 // startup();
 
 export interface CreateCrawlerOptions extends CrawlerConfig {
-    /** Frontier settings (politeness, retries, leases...). `now` and `robots` are wired for you. */
     frontier?: FrontierConfig;
     documentStore?: DocumentStore;
     processor?: DocumentProcessor;
@@ -64,6 +63,6 @@ export function createCrawler(options: CreateCrawlerOptions) {
         { frontier, httpClient, documentStore, processor: processor ?? new HtmlProcessor(config) },
         crawlerConfig,
     );
-    
+
     return { crawler, frontier, httpClient, documentStore };
 }
