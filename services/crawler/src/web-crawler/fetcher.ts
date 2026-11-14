@@ -4,7 +4,7 @@ import { DomHandler } from "domhandler";
 import { Parser } from "htmlparser2";
 import robotsParser, { type Robot } from "robots-parser";
 import puppeteer, { type Browser } from "puppeteer";
-import { FETCH_TIMEOUT_MS, MAX_CONTENT_BYTES, PUPPETEER_TIMEOUT_MS, USER_AGENT } from "./constants.js";
+import { FETCH_TIMEOUT_MS, MAX_CONTENT_BYTES, PUPPETEER_TIMEOUT_MS, USER_AGENT } from "../url-frontier/constants.ts";
 
 // Everything about actually retrieving one page: robots.txt rules,
 // the streaming HTTP fetch, and the headless-browser fallback.

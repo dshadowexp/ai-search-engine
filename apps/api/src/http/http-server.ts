@@ -1,5 +1,5 @@
 import { createServer, type Server, IncomingMessage, ServerResponse } from "node:http";
-import type { ErrorMiddleware, HTTPMethod, Middleware, NextFunction, Route } from "./types.js";
+import type { ErrorMiddleware, HTTPMethod, Middleware, NextFunction, Route } from "./types.ts";
 
 class HTTPServer {
     private server: Server;
@@ -11,11 +11,7 @@ class HTTPServer {
         this.routes = [];
 
         this.server.on("request", (req, res) => {
-            // res.end('Hello');
-            // return;
             this.runMiddlewares(req, res, 0);
-            console.log(this.middlewares.length, req.method, req.url);
-            
         });
     }
 

@@ -1,12 +1,12 @@
-import HTTPServer from "./server.ts";
+import HTTPServer from "./http-server.ts";
 import { cleanseQuery, cors, helmet } from "./middlewares.ts";
 
-const server = new HTTPServer();
+const serverApp = new HTTPServer();
 
-server.beforeEach(cors);
-server.beforeEach(helmet);
+serverApp.beforeEach(cors);
+serverApp.beforeEach(helmet);
 
-server.get('/autocomplete', cleanseQuery, (req, res) => {
+serverApp.get('/autocomplete', cleanseQuery, (req, res) => {
     const q = req.query.get("q") ?? "";
 
     // get suggestions
@@ -16,7 +16,7 @@ server.get('/autocomplete', cleanseQuery, (req, res) => {
     res.end(JSON.stringify(suggestions));
 });
 
-server.get('/search', cleanseQuery, (req, res) => {
+serverApp.get('/search', cleanseQuery, (req, res) => {
     const q = req.query.get("q") ?? "";
     const page = Number(req.query.get("page") ?? "1");
 
@@ -26,7 +26,7 @@ server.get('/search', cleanseQuery, (req, res) => {
     res.end(JSON.stringify(results));
 });
 
-server.post('/summary', (req, res) => {
+serverApp.post('/summary', (req, res) => {
     res.writeHead(200, {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
@@ -37,4 +37,15 @@ server.post('/summary', (req, res) => {
     res.flushHeaders(); 
 });
 
-export default server;
+serverApp.get('/crawling', (req, res) => {
+    res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+    });
+
+    res.flushHeaders(); 
+});
+
+export default serverApp;
