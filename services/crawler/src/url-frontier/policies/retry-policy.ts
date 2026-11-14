@@ -1,4 +1,4 @@
-import type { CrawlResult } from "../../crawler/types.ts";
+import { CrawlResult } from "../../types.ts";
 
 export interface RetryPolicyConfig {
     maxAttempts?: number;

@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "dev": "node --watch ./src/main.ts",
-    "test": "node --test"
+    "test": "node --test",
+    "build:proto": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "keywords": [],
   "type": "module",
@@ -15,7 +16,10 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@grpc/proto-loader": "^0.8.1",
     "cheerio": "^1.2.0",
+    "pg": "^8.23.1",
     "robots-parser": "^3.0.1"
   }
 }

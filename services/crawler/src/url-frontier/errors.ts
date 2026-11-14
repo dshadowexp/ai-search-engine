@@ -1,4 +1,4 @@
-import type { CrawlResult } from "../web-crawler/types.ts";
+import { CrawlResult } from "../types.ts";
 import type { Lease } from "./types.ts";
 
 export class StaleLeaseError extends Error {
@@ -9,5 +9,5 @@ export class StaleLeaseError extends Error {
 }
 
 export function errorText(r: CrawlResult): string | undefined {
-  return r.outcome === "retryable_failure" ? (r.error ?? (r.statusCode ? `HTTP ${r.statusCode}` : undefined)) : undefined;
+    return r.outcome === "retryable_failure" ? (r.error ?? (r.statusCode ? `HTTP ${r.statusCode}` : undefined)) : undefined;
 }

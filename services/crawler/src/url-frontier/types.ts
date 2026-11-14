@@ -1,4 +1,4 @@
-import type { CrawlResult } from "../crawler/types.ts";
+import { AddOptions, AddResult, CrawlResult } from "../types.ts";
 
 /**
  * 
@@ -69,13 +69,14 @@ export interface HostRecord {
  * What a worker holds while it fetches a URL. 
  * */
 export interface Lease {
-  entryId: string;
-  url: string; // the canonical URL to fetch
-  hostId: string;
-  workerId: string;
-  token: string;
-  expiresAt: number;
-  attempt: number;
+    entryId: string;
+    url: string; // the canonical URL to fetch
+    hostId: string;
+    workerId: string;
+    token: string;
+    expiresAt: number;
+    attempt: number;
+    depth: number; // link hops from a seed
 }
 
 export interface FrontierStore {
@@ -115,28 +116,13 @@ export interface FrontierStats {
   heapUsedBytes: number;
 }
 
-export type AddResult = "added" | "duplicate" | "invalid" | "rejected" | "backpressure";
-
-export interface AddOptions {
-  priority?: number;
-  depth?: number;
-  baseUrl?: string;
-}
-
 export interface URLFrontier {
     add(url: string, options?: AddOptions): Promise<AddResult>;
-
     claimNext(workerId: string): Promise<Lease | null>;
-
-    acknowledge(
-        lease: Lease,
-        result: CrawlResult
-    ): Promise<void>;
-
-    release(
-        lease: Lease,
-        reason: string
-    ): Promise<void>;
-
+    acknowledge(lease: Lease, result: CrawlResult): Promise<void>;
+    release(lease: Lease, reason: string): Promise<void>;
+    renewLease(lease: Lease): Promise<Lease>;
+    /** When the next host becomes eligible (ms epoch), or null if nothing is scheduled. */
+    nextEligibleAt(): number | null;
     getStats(): Promise<FrontierStats>;
 }
