@@ -1,13 +1,12 @@
 import { type Lease, type URLFrontier } from "./url-frontier/types.ts";
-import type { ResolvedCrawlerConfig } from "./crawler-config.ts";
+import type { ResolvedCrawlerConfig } from "./config.ts";
 import { type HttpClient } from "./http-fetch/http-client.ts";
 import { classifyResponse } from "./http-fetch/response-classifier.ts";
 import { detectContentKind, validateContent } from "./processor/content-detector.ts";
 import { decodeBody } from "./processor/decode-body.ts";
-import type { CrawledDocument } from "@search/types";
 import type {CrawlerStats, CrawlResult, DocumentProcessor, ResponseHead } from "./types.ts";
-import { type DocumentStore } from "@search/shared";
-import { sleep } from "@search/utils";
+import { type DocumentStore, LogStream } from "@search/infra";
+import { sleep, CrawledDocument } from "@search/core";
 import { FetchError } from "./errors.ts";
 import { StaleLeaseError } from "./url-frontier/errors.ts";
 
@@ -87,13 +86,16 @@ export class CrawlerWorker {
                 this.stats.staleLeases++; // another worker owns this URL now; drop our work
                 return;
             }
+
             if (signal.aborted) {
                 await this.releaseForShutdown(heartbeat.lease);
                 return;
             }
+
             // Persist BEFORE acknowledging. A crash in between just means the URL is crawled again
             // (the store is idempotent). Discovered links are enqueued by acknowledge() itself.
             if (outcome.document) {
+                LogStream.getInstance().log(JSON.stringify(outcome.document))
                 await this.deps.documentStore.save(outcome.document);
                 this.stats.pagesStored++;
             }
@@ -108,9 +110,12 @@ export class CrawlerWorker {
     }
 
     private async crawl(lease: Lease, signal: AbortSignal): Promise<Outcome> {
+        LogStream.getInstance().log(lease.url, 'CRAWL');
         const supported = new Set(this.config.supportedKinds);
         const wantsBody = (head: ResponseHead) => {
-        if (head.statusCode < 200 || head.statusCode >= 300) return false;
+            if (head.statusCode < 200 || head.statusCode >= 300) 
+                return false;
+
             const kind = detectContentKind(head.contentType);
             return kind === "unknown" || supported.has(kind);
         };
@@ -144,6 +149,11 @@ export class CrawlerWorker {
             depth: lease.depth,
             truncated: res.truncated,
         });
+
+        LogStream.getInstance().log(
+            page.document?.links.length,
+            '\t[OUTCOME'
+        )
 
         return { 
             result: { outcome: "success", discoveredLinks: page.links }, 
@@ -211,17 +221,20 @@ export class CrawlerWorker {
         let lost = false;
         let renewing = false;
         const everyMs = Math.max(MIN_HEARTBEAT_MS, (initial.expiresAt - this.config.now()) / 3);
+
         const timer = setInterval(async () => {
-            if (renewing || lost) return;
+            if (renewing || lost) 
+                return;
+
             renewing = true;
             try {
                 current = await this.deps.frontier.renewLease(current);
             } catch (err) {
                 if (err instanceof StaleLeaseError) {
-                lost = true;
-                job.abort(new Error("lease lost"));
+                    lost = true;
+                    job.abort(new Error("lease lost"));
                 } else {
-                this.stats.internalErrors++;
+                    this.stats.internalErrors++;
                 }
             } finally {
                 renewing = false;

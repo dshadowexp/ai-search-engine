@@ -1,9 +1,13 @@
-import { sleep } from "@search/utils";
+import { sleep } from "@search/core";
 import type { ResolvedIndexingConfig } from "./config.ts";
 import type { Indexer } from "./indexer.ts";
-import { EmbeddingError } from "./semantic/embedding-client.ts";
 import type { IndexJobStore } from "./storage/job-store.ts";
 import { StaleStageLeaseError, type IndexJob, type IndexStage, type IndexingStats, type StageLease } from "./types.ts";
+
+export interface IndexerDependencies {
+    jobs: IndexJobStore; 
+    indexer: Indexer
+}
 
 interface Heartbeat {
     readonly lease: StageLease;
@@ -16,9 +20,9 @@ const MAX_WAIT_MS = 1_000;
 const MIN_HEARTBEAT_MS = 10;
 
 /** Claim a stage -> run it -> complete -> publish. Stateless: all durable state is in the stores. */
-export class IndexWorker {
+export class IndexerWorker {
     constructor(
-        private readonly deps: { jobs: IndexJobStore; indexer: Indexer },
+        private readonly deps: IndexerDependencies,
         private readonly config: ResolvedIndexingConfig,
         readonly workerId: string,
         private readonly stages: readonly IndexStage[],
@@ -35,10 +39,12 @@ export class IndexWorker {
                 await sleep(MAX_WAIT_MS, signal);
                 continue;
             }
+
             if (!lease) {
                 await this.waitForWork(signal);
                 continue;
             }
+
             await this.processLease(lease, signal);
         }
     }
@@ -47,6 +53,7 @@ export class IndexWorker {
         const job = new AbortController();
         const heartbeat = this.startHeartbeat(lease, job);
         this.stats.activeJobs++;
+
         try {
             await this.deps.indexer.execute(lease, AbortSignal.any([signal, job.signal]));
             if (heartbeat.lost) {
@@ -89,7 +96,7 @@ export class IndexWorker {
             await this.releaseForShutdown(heartbeat.lease);
             return;
         }
-        const retryable = err instanceof EmbeddingError ? err.retryable : true; // unknown errors get bounded retries
+        const retryable = true; // indexing errors get bounded retries
         try {
             const job = await this.deps.jobs.fail(heartbeat.lease, err instanceof Error ? err.message : String(err), { retryable });
             if (job.stages[heartbeat.lease.stage].status === "failed") this.stats.deadLettered++;

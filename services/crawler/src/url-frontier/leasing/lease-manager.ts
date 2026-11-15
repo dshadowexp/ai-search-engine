@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { FrontierEntry, Lease } from "../types.js";
-import { PriorityQueue } from "@search/shared";
+import { PriorityQueue } from "@search/core";
 
 interface Expiry {
     entryId: string;

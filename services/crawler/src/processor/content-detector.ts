@@ -1,4 +1,4 @@
-import { ContentKind } from "../types.ts";
+import type { ContentKind } from "../types.ts";
 
 /** Header only. "unknown" = missing/generic type: the body must be sniffed. */
 export function detectContentKind(contentType: string | null, body?: Uint8Array): ContentKind | "unknown" {
@@ -19,7 +19,6 @@ export function detectContentKind(contentType: string | null, body?: Uint8Array)
             return type.startsWith("image/") ? "image" : "other";
     }
 }
-
 
 /** Magic-byte fallback for servers that omit or botch Content-Type. */
 export function sniffKind(body: Uint8Array): ContentKind {

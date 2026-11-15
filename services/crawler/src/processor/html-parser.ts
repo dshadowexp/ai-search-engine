@@ -26,13 +26,13 @@ export class HtmlProcessor implements DocumentProcessor {
         const document = noindex
             ? null
             : extractDocument($, {
-                    url: input.url,
-                    fetchedAt: input.fetchedAt,
-                    depth: input.depth,
-                    truncated: input.truncated,
-                    links,
-                    maxTextChars: this.cfg.maxTextChars,
-                });
+                url: input.url,
+                fetchedAt: input.fetchedAt,
+                depth: input.depth,
+                truncated: input.truncated,
+                links,
+                maxTextChars: this.cfg.maxTextChars,
+            });
                 
         return { document, links, noindex, nofollow };
     }

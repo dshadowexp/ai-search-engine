@@ -1,4 +1,4 @@
-import { PriorityQueue } from "@search/shared";
+import { PriorityQueue } from "@search/core";
 
 interface Slot {
     hostId: string;

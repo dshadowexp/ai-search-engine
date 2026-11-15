@@ -1,7 +1,7 @@
-import { sleep } from "../crawler/sleep.js";
+import { sleep } from "@search/core";
 import type { Indexer } from "./indexer.js";
-import { IndexWorker } from "./index-worker.js";
-import type { ResolvedIndexingConfig } from "./indexing-config.js";
+import { IndexerWorker } from "./worker.js";
+import type { ResolvedIndexingConfig } from "./config.js";
 import type { DocumentRepository } from "./storage/document-repository.js";
 import type { IndexJobStore } from "./storage/job-store.js";
 import type { CorpusStats, LexicalRepository } from "./storage/lexical-repository.js";
@@ -16,14 +16,13 @@ export interface IndexingPipelineStats {
 
 /** Bounded worker pools, one per stage, plus a reconciler. The counterpart of `Crawler` for indexing. */
 export class IndexingPipeline {
-    private controller?: AbortController;
+    private controller: AbortController | undefined;
     private running: Promise<void>[] = [];
     private reconciler?: NodeJS.Timeout;
 
     constructor(
         private readonly deps: { jobs: IndexJobStore; indexer: Indexer; documents: DocumentRepository; lexical: LexicalRepository },
         private readonly config: ResolvedIndexingConfig,
-        private readonly semanticEnabled: boolean,
         private readonly stats: IndexingStats,
         private readonly ingestStats: IngestStats,
     ) {}
@@ -31,15 +30,10 @@ export class IndexingPipeline {
     start(): void {
         if (this.controller) return;
         const controller = (this.controller = new AbortController());
-        const pools: [IndexStage, number][] = [["lexical", this.config.lexicalConcurrency]];
-        if (this.semanticEnabled) 
-            pools.push(["semantic", this.config.semanticConcurrency]);
 
-        for (const [stage, n] of pools) {
-            for (let i = 0; i < n; i++) {
-                const worker = new IndexWorker(this.deps, this.config, `indexer-${process.pid}-${stage}-${i}`, [stage], this.stats);
-                this.running.push(worker.run(controller.signal));
-            }
+        for (let i = 0; i < this.config.lexicalConcurrency; i++) {
+            const worker = new IndexerWorker(this.deps, this.config, `indexer-${process.pid}-lexical-${i}`, ["lexical"], this.stats);
+            this.running.push(worker.run(controller.signal));
         }
         
         this.reconciler = setInterval(() => void this.deps.indexer.reconcile().catch(() => this.stats.internalErrors++), this.config.reconcileIntervalMs);
@@ -69,14 +63,13 @@ export class IndexingPipeline {
     }
 
     /**
-     * Rebuild ONE stage for every active document, e.g. after improving the tokenizer:
-     * reindex("lexical") never touches the embedding service, reindex("semantic") never touches postings.
+     * Rebuild lexical postings for every active document, e.g. after improving the analyzer.
      */
-    async reindex(stage: IndexStage): Promise<number> {
+    async reindex(): Promise<number> {
         const active = await this.deps.documents.listActive();
 
         for (const { id, activeVersion } of active) 
-            await this.deps.jobs.enqueue(id, activeVersion, { [stage]: "pending" });
+            await this.deps.jobs.enqueue(id, activeVersion, { lexical: "pending" });
 
         return active.length;
     }

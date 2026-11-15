@@ -2,7 +2,7 @@ import { errorText, StaleLeaseError } from "./errors.ts";
 import { InMemoryFrontierStore } from "./frontier-store.ts";
 import { HostManager } from "./host/host-manager.ts";
 import { LeaseManager } from "./leasing/lease-manager.ts";
-import { isPublicHostname, type NormalizeOptions, normalizeUrl, hashUrl } from "@search/utils";
+import { isPublicHostname, type NormalizeOptions, normalizeUrl, hashUrl } from "@search/core";
 import { RetryPolicy, type RetryPolicyConfig } from "./policies/retry-policy.ts";
 import { HostScheduler } from "./scheduling/host-scheduler.ts";
 import { nextEligibleAt } from "./scheduling/scheduler-policy.ts";

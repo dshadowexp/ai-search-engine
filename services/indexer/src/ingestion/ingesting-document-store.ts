@@ -1,5 +1,5 @@
-import type { CrawledDocument } from "@search/types";
-import type { DocumentStore } from "@search/shared";
+import type { CrawledDocument } from "@search/core";
+import type { DocumentStore } from "@search/infra";
 import type { DocumentIngestor } from "./document-ingestor.ts";
 
 /**
@@ -9,10 +9,16 @@ import type { DocumentIngestor } from "./document-ingestor.ts";
  * reports a retryable failure and the URL is crawled again (ingestion is idempotent by content hash).
  */
 export class IngestingDocumentStore implements DocumentStore {
+    private readonly inner: DocumentStore;
+    private readonly ingestor: DocumentIngestor;
+    
     constructor(
-        private readonly inner: DocumentStore,
-        private readonly ingestor: DocumentIngestor,
-    ) {}
+        inner: DocumentStore,
+        ingestor: DocumentIngestor
+    ) {
+        this.ingestor = ingestor;
+        this.inner = inner;
+    }
 
     async save(document: CrawledDocument): Promise<void> {
         await this.inner.save(document);

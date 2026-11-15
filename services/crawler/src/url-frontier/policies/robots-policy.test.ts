@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { parseRobotsTxt, type RobotsPolicy } from "./robots-policy.ts";
-import { flush, healthy, setup } from "../helpers.ts";
+import { flush, healthy, setup } from "../helpers.test.ts";
 
 describe("robots.txt", () => {
     const robotsTxt = `User-agent: *\nDisallow: /private/\nAllow: /private/public\nCrawl-delay: 5\n`;

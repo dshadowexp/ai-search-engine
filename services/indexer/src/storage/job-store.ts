@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { PriorityQueue } from "@search/shared";
+import { PriorityQueue } from "@search/core";
 import {
     INDEX_STAGES,
     StaleStageLeaseError,
@@ -71,10 +71,10 @@ export class InMemoryIndexJobStore implements IndexJobStore {
 
     private readonly jobs = new Map<string, Internal>();
     private readonly byDocument = new Map<string, Set<number>>();
-    private readonly queues: Record<IndexStage, PriorityQueue<Slot>> = { lexical: newQueue(), semantic: newQueue() };
+    private readonly queues: Record<IndexStage, PriorityQueue<Slot>> = { lexical: newQueue() };
     private readonly processing = new Set<string>(); // `${jobId}|${stage}`
     private readonly unpublished = new Set<string>();
-    private readonly counts: Record<IndexStage, Record<StageStatus, number>> = { lexical: zeroCounts(), semantic: zeroCounts() };
+    private readonly counts: Record<IndexStage, Record<StageStatus, number>> = { lexical: zeroCounts() };
     private seq = 0;
 
     constructor(cfg: JobStoreConfig = {}) {
@@ -100,7 +100,7 @@ export class InMemoryIndexJobStore implements IndexJobStore {
                 INDEX_STAGES.map((s) => [s, { status: "skipped", attempts: 0, nextAttemptAt: now, published: false, updatedAt: now }]),
             ) as IndexJob["stages"],
             },
-            stamps: { lexical: 0, semantic: 0 },
+            stamps: { lexical: 0 },
         };
 
         for (const s of INDEX_STAGES) this.counts[s].skipped++;

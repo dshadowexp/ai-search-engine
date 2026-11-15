@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { healthy, setup } from "../helpers.ts";
+import { healthy, setup } from "../helpers.test.ts";
 import { StaleLeaseError } from "../errors.ts";
 
 describe("leases", () => {

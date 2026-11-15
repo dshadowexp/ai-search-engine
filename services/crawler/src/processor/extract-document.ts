@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import type { CheerioAPI } from "cheerio";
-import type { CrawledDocument } from "@search/types";
-import { normalizeUrl } from "@search/utils";
+import { normalizeUrl, type CrawledDocument } from "@search/core";
 
 export interface ExtractContext {
     url: string;

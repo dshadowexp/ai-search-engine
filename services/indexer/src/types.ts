@@ -1,5 +1,5 @@
-export type IndexStage = "lexical" | "semantic";
-export const INDEX_STAGES: readonly IndexStage[] = ["lexical", "semantic"];
+export type IndexStage = "lexical";
+export const INDEX_STAGES: readonly IndexStage[] = ["lexical"];
 
 /** pending also covers "waiting for a retry"; failed is terminal (dead-letter, inspectable). */
 export type StageStatus = "pending" | "processing" | "completed" | "failed" | "skipped";

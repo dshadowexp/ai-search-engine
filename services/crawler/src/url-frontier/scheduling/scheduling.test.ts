@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { healthy, setup } from "../helpers.ts";
+import { healthy, setup } from "../helpers.test.ts";
 
 describe("scheduling", () => {
     it("orders by priority within a host", async () => {

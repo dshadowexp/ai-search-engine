@@ -23,7 +23,11 @@ const WORD = /[\p{L}\p{N}]+(?:[.\-_/'’][\p{L}\p{N}]+)*(?:(?<=\p{L})(?:\+\+|\+|
  * stemming/lemmatization, and word segmentation for CJK scripts.
  */
 export class StandardAnalyzer implements Analyzer {
-    constructor(private readonly maxTokenLength = 64) {}
+    private readonly maxTokenLength: number;
+    
+    constructor(maxTokenLength: number = 64) {
+        this.maxTokenLength = maxTokenLength;
+    }
 
     analyze(text: string): Token[] {
         const out: Token[] = [];

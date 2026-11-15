@@ -10,5 +10,8 @@
     "test": "node --test"
   },
   "keywords": [],
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@search/infra": "*"
+  }
 }

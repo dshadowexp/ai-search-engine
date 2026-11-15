@@ -2,7 +2,7 @@ import { lookup as dnsLookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import type { ReadableStream } from "node:stream/web";
 import { Agent, fetch as undiciFetch } from "undici";
-import { isPublicIp } from "@search/utils";
+import { isPublicIp } from "@search/core";
 import type { HttpResponse, ResponseHead } from "../types.ts";
 import { BlockedAddressError, FetchError } from "../errors.ts";
 
@@ -127,10 +127,10 @@ export class UndiciHttpClient implements HttpClient {
         try {
             u = new URL(url);
         } catch {
-            throw new FetchError("invalid_url", `invalid URL: ${url}`);
+            throw new FetchError("invalid_url", `invalid URL: ${url}`, false);
         }
 
-        if (u.protocol !== "http:" && u.protocol !== "https:") throw new FetchError("invalid_url", `unsupported protocol: ${u.protocol}`);
+        if (u.protocol !== "http:" && u.protocol !== "https:") throw new FetchError("invalid_url", `unsupported protocol: ${u.protocol}`, false);
         // IP literals skip DNS entirely, so the lookup hook never sees them.
         const host = u.hostname.replace(/^\[|\]$/g, "");
         if (isIP(host) && !this.allowed(host)) 
@@ -141,8 +141,8 @@ export class UndiciHttpClient implements HttpClient {
 
     private toFetchError(err: unknown, caller: AbortSignal | undefined, timeout: AbortSignal): FetchError {
         if (err instanceof FetchError) return err;
-        if (caller?.aborted) return new FetchError("aborted", "request aborted");
-        if (timeout.aborted) return new FetchError("timeout", `timed out after ${this.cfg.timeoutMs}ms`);
+        if (caller?.aborted) return new FetchError("aborted", "request aborted", false);
+        if (timeout.aborted) return new FetchError("timeout", `timed out after ${this.cfg.timeoutMs}ms`, true);
         
         for (let e: unknown = err, depth = 0; e instanceof Error && depth < 5; e = e.cause, depth++) {
             if (e instanceof BlockedAddressError) return new FetchError("blocked", e.message, false);
@@ -150,7 +150,7 @@ export class UndiciHttpClient implements HttpClient {
 
         const cause = err instanceof Error && err.cause instanceof Error ? err.cause : undefined;
         const code = (cause as NodeJS.ErrnoException | undefined)?.code;
-        return new FetchError("network", `${cause?.message ?? (err as Error)?.message ?? "network error"}${code ? ` (${code})` : ""}`);
+        return new FetchError("network", `${cause?.message ?? (err as Error)?.message ?? "network error"}${code ? ` (${code})` : ""}`, true);
     }
 }
 

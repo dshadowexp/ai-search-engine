@@ -1,0 +1,23 @@
+{
+  "name": "@search/infra",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1169.0",
+    "@aws-sdk/client-sqs": "^3.1169.0",
+    "@search/core": "^1.0.0"
+  }
+}

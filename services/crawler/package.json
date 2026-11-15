@@ -12,9 +12,8 @@
   "keywords": [],
   "type": "module",
   "dependencies": {
-    "@search/shared": "*",
-    "@search/types": "^1.0.0",
-    "@search/utils": "^1.0.0",
+    "@search/infra": "*",
+    "@search/core": "*",
     "cheerio": "^1.2.0"
   }
 }

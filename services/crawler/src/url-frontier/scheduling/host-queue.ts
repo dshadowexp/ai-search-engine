@@ -1,5 +1,5 @@
 import type { FrontierEntry } from "../types.js";
-import { PriorityQueue } from "@search/shared";
+import { PriorityQueue } from "@search/core";
 
 interface Slot {
     entry: FrontierEntry;

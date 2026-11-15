@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { Frontier } from "./frontier.ts";
 import { StaleLeaseError } from "./errors.ts";
-import { healthy, setup } from "./helpers.ts";
+import { healthy, setup } from "./helpers.test.ts";
 
 describe("add()", () => {
     it("dedupes, rejects and reports", async () => {

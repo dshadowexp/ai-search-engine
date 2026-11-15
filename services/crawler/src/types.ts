@@ -1,4 +1,4 @@
-import type { CrawledDocument } from "@search/types";
+import type { CrawledDocument } from "@search/core";
 
 export type AddResult = "added" | "duplicate" | "invalid" | "rejected" | "backpressure";
 

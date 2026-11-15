@@ -12,7 +12,7 @@
   "keywords": [],
   "type": "module",
   "dependencies": {
-    "@search/shared": "*",
-    "@search/types": "^1.0.0"
+    "@search/core": "*",
+    "@search/infra": "*"
   }
 }
