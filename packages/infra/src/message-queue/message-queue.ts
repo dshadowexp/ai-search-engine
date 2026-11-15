@@ -7,7 +7,7 @@ import {
     ReceiveMessageCommand,
     DeleteMessageCommand
 } from "@aws-sdk/client-sqs";
-import { LogStream } from "./log-stream.ts";
+import { LogStream } from "./logging/log-stream.ts";
 
 export interface ConsumeOptions {
     concurrency?: number;

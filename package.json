@@ -20,8 +20,5 @@
         "@types/node": "^26.6.6",
         "ts-node": "^10.9.2",
         "typescript": "^7.0.2"
-    },
-    "dependencies": {
-        "@aws-sdk/client-s3": "^3.1169.0"
     }
 }

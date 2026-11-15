@@ -1,4 +1,5 @@
-export { LogStream } from "./log-stream.ts";
-export { InMemoryDocumentStore, S3DocumentStore } from "./document-store.ts";
+export { LogStream } from "./logging/log-stream.ts";
+export { InMemoryDocumentStore } from "./document-store/document-store.ts";
+export { S3DocumentStore } from "./document-store/s3-document-store.ts";
 
-export type { DocumentStore } from "./document-store.ts"
+export type { DocumentStore } from "./document-store/document-store.ts"
