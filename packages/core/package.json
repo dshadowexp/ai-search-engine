@@ -14,5 +14,8 @@
     "test": "node --test"
   },
   "keywords": [],
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^18.0.10"
+  }
 }

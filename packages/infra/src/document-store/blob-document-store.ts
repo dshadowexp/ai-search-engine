@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { gunzip, gzip } from "node:zlib";
 import { z } from "zod";
 import { crawledDocumentSchema, hashUrl } from "@search/core";
@@ -8,7 +7,6 @@ import { invalid } from "../errors.ts";
 
 export const DEFAULT_KEY_PREFIX = "documents/";
 export const DOCUMENT_SCHEMA_VERSION = 1;
-const TIMESTAMP_DIGITS = 15;
 
 export interface BlobDocumentStoreOptions {
     keyPrefix?: string;
@@ -17,7 +15,7 @@ export interface BlobDocumentStoreOptions {
 }
 
 export interface CrawlerBlobDocumentStoreOptions extends BlobDocumentStoreOptions {
-    blobs: Pick<BlobStore, "put" | "get" | "list" | "close">;
+    blobs: Pick<BlobStore, "put" | "get" | "list" | "delete" | "close">;
 }
 
 export interface IndexerBlobDocumentStoreOptions extends BlobDocumentStoreOptions {
@@ -31,7 +29,7 @@ export interface DocumentRef {
 }
 
 export interface SavedDocument extends DocumentRef {
-    /** false: this exact version already existed (a retry or duplicate delivery). */
+    /** False when this URL already had a snapshot at the time of the write. */
     created: boolean;
     storedBytes: number;
 }
@@ -44,6 +42,8 @@ export interface CrawlerBlobDocuments {
 export interface IndexerBlobDocuments {
     load(ref: DocumentRef | string): Promise<CrawledDocument>;
 }
+
+type ParsedDocumentKey = Pick<DocumentRef, "key" | "documentId"> & { fetchedAt?: number };
 
 const envelopeSchema = z.object({
     schemaVersion: z.literal(DOCUMENT_SCHEMA_VERSION),
@@ -58,24 +58,32 @@ const gunzipAsync = (data: Uint8Array, maxOutputLength: number): Promise<Buffer>
         gunzip(data, { maxOutputLength }, (error, output) => error ? reject(error) : resolve(output)),
     );
 
+/** A stable key per URL, so each successful crawl replaces that URL's current snapshot. */
 export function documentKey(
     url: string,
-    fetchedAt: number,
-    contentHash16: string,
     keyPrefix = DEFAULT_KEY_PREFIX,
 ): string {
-    return `${keyPrefix}${hashUrl(url)}/${String(fetchedAt).padStart(TIMESTAMP_DIGITS, "0")}-${contentHash16}.json.gz`;
+    return `${keyPrefix}${hashUrl(url)}.json.gz`;
 }
 
-/** undefined for anything that is not a key this store would have written (keys in events are untrusted input). */
-export function parseDocumentKey(key: string, keyPrefix = DEFAULT_KEY_PREFIX): DocumentRef | undefined {
+/** Parses current and legacy keys; undefined for malformed keys from untrusted events. */
+export function parseDocumentKey(
+    key: string,
+    keyPrefix = DEFAULT_KEY_PREFIX,
+): ParsedDocumentKey | undefined {
     if (!key.startsWith(keyPrefix)) return undefined;
-    const match = /^([0-9a-f]{64})\/(\d{15})-[0-9a-f]{16}\.json\.gz$/.exec(key.slice(keyPrefix.length));
-    return match ? { key, documentId: match[1], fetchedAt: Number(match[2]) } : undefined;
+    const relativeKey = key.slice(keyPrefix.length);
+    const currentMatch = /^([0-9a-f]{64})\.json\.gz$/.exec(relativeKey);
+    if (currentMatch) return { key, documentId: currentMatch[1] };
+
+    const legacyMatch = /^([0-9a-f]{64})\/(\d{15})-[0-9a-f]{16}\.json\.gz$/.exec(relativeKey);
+    return legacyMatch
+        ? { key, documentId: legacyMatch[1], fetchedAt: Number(legacyMatch[2]) }
+        : undefined;
 }
 
 export async function saveDocumentVersion(
-    blobs: Pick<BlobStore, "put">,
+    blobs: Pick<BlobStore, "put" | "list" | "delete">,
     document: CrawledDocument,
     keyPrefix: string,
     maxDocumentBytes: number,
@@ -97,40 +105,64 @@ export async function saveDocumentVersion(
     }
 
     const documentId = hashUrl(doc.url);
-    const key = documentKey(
-        doc.url,
-        doc.fetchedAt,
-        createHash("sha256").update(json).digest("hex").slice(0, 16),
-        keyPrefix,
-    );
+    const key = documentKey(doc.url, keyPrefix);
     const body = await gzipAsync(Buffer.from(json));
+    const existing = await blobs.list(key, { limit: 1000 });
     const put = await blobs.put(key, body, {
         contentType: "application/gzip",
         metadata: { "schema-version": String(DOCUMENT_SCHEMA_VERSION), "document-id": documentId },
-        ifNotExists: true,
         ...(options.signal ? { signal: options.signal } : {}),
     });
 
-    return { key, documentId, fetchedAt: doc.fetchedAt, created: put.created, storedBytes: body.byteLength };
+    const existed = existing.items.some((item) => item.key === key);
+    await removeLegacyDocumentVersions(blobs, documentId, keyPrefix, options);
+    return { key, documentId, fetchedAt: doc.fetchedAt, created: !existed && put.created, storedBytes: body.byteLength };
+}
+
+async function removeLegacyDocumentVersions(
+    blobs: Pick<BlobStore, "list" | "delete">,
+    documentId: string,
+    keyPrefix: string,
+    options: { signal?: AbortSignal },
+): Promise<void> {
+    let token: string | undefined;
+    do {
+        const page = await blobs.list(`${keyPrefix}${documentId}/`, {
+            limit: 1000,
+            ...(token ? { token } : {}),
+            ...(options.signal ? { signal: options.signal } : {}),
+        });
+        for (const item of page.items) {
+            if (parseDocumentKey(item.key, keyPrefix)?.documentId === documentId) {
+                await blobs.delete(item.key, options.signal ? { signal: options.signal } : {});
+            }
+        }
+        token = page.nextToken;
+    } while (token);
 }
 
 export async function listDocumentVersions(
-    blobs: Pick<BlobStore, "list">,
+    blobs: Pick<BlobStore, "get" | "list">,
     url: string,
     keyPrefix: string,
+    maxDocumentBytes: number,
 ): Promise<DocumentRef[]> {
-    const prefix = `${keyPrefix}${hashUrl(url)}/`;
+    const prefix = `${keyPrefix}${hashUrl(url)}`;
     const refs: DocumentRef[] = [];
     let token: string | undefined;
     do {
         const page = await blobs.list(prefix, { limit: 1000, ...(token ? { token } : {}) });
         for (const item of page.items) {
-            const ref = parseDocumentKey(item.key, keyPrefix);
-            if (ref) refs.push(ref);
+            const parsedKey = parseDocumentKey(item.key, keyPrefix);
+            if (!parsedKey) continue;
+
+            const fetchedAt = parsedKey.fetchedAt ??
+                (await loadDocument(blobs, item.key, keyPrefix, maxDocumentBytes)).fetchedAt;
+            refs.push({ key: item.key, documentId: parsedKey.documentId, fetchedAt });
         }
         token = page.nextToken;
     } while (token);
-    return refs.sort((left, right) => (left.key < right.key ? -1 : left.key > right.key ? 1 : 0));
+    return refs.sort((left, right) => left.fetchedAt - right.fetchedAt || left.key.localeCompare(right.key));
 }
 
 export async function loadDocument(
@@ -144,7 +176,9 @@ export async function loadDocument(
     if (!parsedKey) {
         throw invalid(`not a document key: ${key}`);
     }
-    if (typeof ref !== "string" && (ref.documentId !== parsedKey.documentId || ref.fetchedAt !== parsedKey.fetchedAt)) {
+    if (typeof ref !== "string" &&
+        (ref.documentId !== parsedKey.documentId ||
+            (parsedKey.fetchedAt !== undefined && ref.fetchedAt !== parsedKey.fetchedAt))) {
         throw invalid(`document reference ${key} does not match its key`);
     }
 
@@ -166,8 +200,9 @@ export async function loadDocument(
     }
 
     const document = parsed.data.document;
-    if (hashUrl(document.url) !== parsedKey.documentId || document.fetchedAt !== parsedKey.fetchedAt) {
-        throw invalid(`document ${key} does not belong at this key (url/fetchedAt mismatch)`);
+    if (hashUrl(document.url) !== parsedKey.documentId ||
+        (parsedKey.fetchedAt !== undefined && document.fetchedAt !== parsedKey.fetchedAt)) {
+        throw invalid(`document ${key} does not belong at this key (URL/fetchedAt mismatch)`);
     }
     return document;
 }

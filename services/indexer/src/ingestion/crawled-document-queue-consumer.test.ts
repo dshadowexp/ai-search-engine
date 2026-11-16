@@ -24,7 +24,7 @@ const document: CrawledDocument = {
 
 const documentId = hashUrl(document.url);
 const reference = {
-    key: `documents/${documentId}/000000000000001-${"b".repeat(16)}.json.gz`,
+    key: `documents/${documentId}.json.gz`,
     documentId,
     fetchedAt: 1,
 };

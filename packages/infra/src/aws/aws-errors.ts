@@ -1,4 +1,4 @@
-import { InfraError, StaleReceiptError } from "../errors.js";
+import { InfraError, StaleReceiptError } from "../errors.ts";
 
 interface AwsLikeError {
   name?: string;

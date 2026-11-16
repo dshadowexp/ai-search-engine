@@ -3,11 +3,15 @@ import { SQSClient } from "@aws-sdk/client-sqs";
 
 export interface AwsConfig {
   region: string;
+  endpoint?: string;
 }
 
 const common = (cfg: AwsConfig) => ({
   region: cfg.region,
 });
 
-export const createS3Client = (cfg: AwsConfig): S3Client => new S3Client({ ...common(cfg) });
+export const createS3Client = (cfg: AwsConfig): S3Client => new S3Client({
+  ...common(cfg),
+  ...(cfg.endpoint ? { endpoint: cfg.endpoint, forcePathStyle: true } : {}),
+});
 export const createSqsClient = (cfg: AwsConfig): SQSClient => new SQSClient({ ...common(cfg) });

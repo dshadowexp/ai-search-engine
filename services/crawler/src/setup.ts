@@ -1,30 +1,24 @@
 import { type CrawlerConfig, resolveCrawlerConfig } from "./config.ts";
 import { Crawler } from "./crawler.ts";
 import { type HttpClient, UndiciHttpClient } from "./http-fetch/http-client.ts";
-import {
-    type CrawlerBlobDocuments,
-    type CrawledDocumentMessage,
-    type DocumentStore,
-    type MessageQueueProducer,
-    InMemoryDocumentStore,
-    QueueingDocumentStore,
+import type {
+    SavedDocument,
+    CrawlerBlobDocuments,
+    DocumentStore,
+    MessageQueueProducer,
 } from "@search/infra";
-import { HtmlProcessor } from "./processor/html-parser.ts";
-import { ImageProcessor } from "./processor/image-parser.ts";
-import { ProcessorRouter } from "./processor/processor-router.ts";
-import { XmlProcessor } from "./processor/xml-parser.ts";
-import type { ContentKind, DocumentProcessor } from "./types.ts";
-import { Frontier, type FrontierConfig } from "./url-frontier/frontier.ts";
+import { InMemoryFrontier, type FrontierConfig } from "./url-frontier/frontier.ts";
 import { HttpRobotsPolicy } from "./url-frontier/policies/robots-policy.ts";
+import type { CrawledDocument } from "@search/core";
+import type { CrawledDocumentMessage } from "./queue/crawled-document-message.ts";
+import { InMemoryDocumentStore } from "./storage/in-memory-document-store.ts";
 
 export interface CreateCrawlerOptions extends CrawlerConfig {
     frontier?: FrontierConfig;
-    documentStore?: DocumentStore;
+    documentStore?: DocumentStore<CrawledDocument, SavedDocument>;
     /** Provide these together to persist crawls and publish blob references for indexing. */
     blobDocuments?: CrawlerBlobDocuments;
-    documentQueue?: MessageQueueProducer<CrawledDocumentMessage>;
-    /** Override or extend the built-in HTML, XML, and image processors. */
-    processors?: Partial<Record<ContentKind, DocumentProcessor>>;
+    indexQueue?: MessageQueueProducer<CrawledDocumentMessage>;
 }
 
 /**
@@ -36,28 +30,12 @@ export function createCrawler(options: CreateCrawlerOptions) {
         frontier: frontierConfig,
         documentStore: providedDocumentStore,
         blobDocuments,
-        documentQueue,
-        processors,
+        indexQueue,
         ...crawlerConfig
     } = options;
     const config = resolveCrawlerConfig(crawlerConfig);
-    if (Boolean(blobDocuments) !== Boolean(documentQueue)) {
-        throw new Error("blobDocuments and documentQueue must be provided together");
-    }
-    if (providedDocumentStore && documentQueue) {
-        throw new Error("Provide either documentStore or blobDocuments with documentQueue, not both");
-    }
-    const documentStore = providedDocumentStore ??
-        (blobDocuments && documentQueue
-            ? new QueueingDocumentStore(blobDocuments, documentQueue)
-            : new InMemoryDocumentStore());
-    const processor = new ProcessorRouter({
-        html: new HtmlProcessor(config),
-        xml: new XmlProcessor(config),
-        image: new ImageProcessor(),
-        ...processors,
-    });
-    processor.assertSupports(config.supportedKinds);
+
+    const documentStore = providedDocumentStore ?? new InMemoryDocumentStore();
 
     const httpClient: HttpClient = new UndiciHttpClient({
         userAgent: config.userAgent,
@@ -66,16 +44,16 @@ export function createCrawler(options: CreateCrawlerOptions) {
         ...(config.network !== undefined ? { network: config.network } : {}),
     });
     
-    const frontier = new Frontier({
+    const frontier = new InMemoryFrontier({
         now: config.now,
         robots: new HttpRobotsPolicy(config.userAgent, httpClient.fetchImpl, config.timeoutMs),
         ...frontierConfig,
     });
     
     const crawler = new Crawler(
-        { frontier, httpClient, documentStore, processor: processor ?? new HtmlProcessor(config) },
+        { frontier, httpClient, documentStore, indexQueue: indexQueue!},
         crawlerConfig,
     );
 
-    return { crawler, frontier, httpClient, documentStore };
+    return crawler;
 }

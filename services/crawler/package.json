@@ -7,7 +7,7 @@
     "dev": "node --watch ./src/main.ts",
     "test": "node --test",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "type": "module",

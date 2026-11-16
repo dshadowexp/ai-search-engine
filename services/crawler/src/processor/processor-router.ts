@@ -3,7 +3,7 @@ import type { ContentKind, DocumentProcessor, ProcessedPage, ProcessInput } from
 export type ProcessorRegistry = Partial<Record<ContentKind, DocumentProcessor>>;
 
 /** Dispatches each validated response to the processor registered for its detected kind. */
-export class ProcessorRouter implements DocumentProcessor {
+export class ProcessorRouter {
     private readonly processors: ProcessorRegistry;
 
     constructor(processors: ProcessorRegistry) {

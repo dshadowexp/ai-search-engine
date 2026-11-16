@@ -1,5 +1,16 @@
-import type { NetworkPolicy } from "./http-fetch/http-client.ts";
+import type { DocumentStore, MessageQueueProducer, SavedDocument } from "@search/infra";
+import type { HttpClient, NetworkPolicy } from "./http-fetch/http-client.ts";
 import type { ContentKind } from "./types.ts";
+import type { IFrontier } from "./url-frontier/types.ts";
+import type { CrawledDocument } from "@search/core";
+import type { CrawledDocumentMessage } from "./queue/crawled-document-message.ts";
+
+export interface CrawlerDependencies {
+    frontier: IFrontier;
+    httpClient: HttpClient;
+    documentStore: DocumentStore<CrawledDocument, SavedDocument>;
+    indexQueue: MessageQueueProducer<CrawledDocumentMessage>
+}
 
 export interface CrawlerConfig {
     /** Descriptive user-agent with a contact/policy URL, e.g. "MyBot/1.0 (+https://example.com/bot)". */

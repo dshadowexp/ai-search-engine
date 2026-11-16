@@ -15,9 +15,10 @@ import type {
     FrontierStore, 
     HostRecord, 
     Lease, 
-    URLFrontier 
+    IFrontier 
 } from "./types.ts";
 import type { AddOptions, AddResult, CrawlResult } from "../types.ts";
+import { LogStream } from "@search/infra";
 
 export interface FrontierConfig {
     /** Injectable clock (ms). Makes every time-based rule testable. */
@@ -42,7 +43,7 @@ export interface FrontierConfig {
     urlFilter?: (url: URL) => boolean;
 }
 
-export class Frontier implements URLFrontier {
+export class InMemoryFrontier implements IFrontier {
     private readonly now: () => number;
     private readonly leaseTtlMs: number;
     private readonly maxPending: number;
@@ -202,6 +203,7 @@ export class Frontier implements URLFrontier {
         // Feed discovered URLs back in (after host state is consistent).
         if (result.outcome === "success") {
             for (const link of result.discoveredLinks ?? []) {
+                LogStream.getInstance().log(link, 'ADDING FRONTIER')
                 this.addSync(link, {
                     baseUrl: entry.canonicalUrl,
                     depth: entry.depth + 1,

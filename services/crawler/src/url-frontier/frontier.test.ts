@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { Frontier } from "./frontier.ts";
+import { InMemoryFrontier } from "./frontier.ts";
 import { StaleLeaseError } from "./errors.ts";
 import { healthy, setup } from "./helpers.test.ts";
 
@@ -115,7 +115,7 @@ describe("invariants under load", () => {
         for (let i = 0; i < 300; i++) 
             await frontier.add(`https://h${i % 7}.com/p${i}`, { priority: Math.floor(rnd() * 10) });
 
-        const held: Awaited<ReturnType<Frontier["claimNext"]>>[] = [];
+        const held: Awaited<ReturnType<InMemoryFrontier["claimNext"]>>[] = [];
         const lastStart = new Map<string, number>();
         for (let step = 0; step < 3000; step++) {
             clock.advance(Math.floor(rnd() * 40));

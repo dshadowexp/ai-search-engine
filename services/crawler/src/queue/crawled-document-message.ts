@@ -10,7 +10,7 @@ const documentReferenceSchema = z.object({
 export const crawledDocumentMessageSchema = z.object({
     schemaVersion: z.literal(1),
     eventType: z.literal("crawler.document.persisted"),
-    /** Stable across publish retries; derive this from the persisted document key. */
+    /** Stable across publish retries, but distinct for each fetch of the same URL. */
     eventId: z.string().min(1).max(128),
     document: documentReferenceSchema,
 }).strict();
@@ -22,7 +22,11 @@ export function createCrawledDocumentMessage(document: CrawledDocumentReference)
     return crawledDocumentMessageSchema.parse({
         schemaVersion: 1,
         eventType: "crawler.document.persisted",
-        eventId: createHash("sha256").update(document.key).digest("hex"),
+        eventId: createHash("sha256")
+            .update(document.key)
+            .update("\0")
+            .update(String(document.fetchedAt))
+            .digest("hex"),
         document: {
             key: document.key,
             documentId: document.documentId,

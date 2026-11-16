@@ -116,7 +116,7 @@ export interface FrontierStats {
   heapUsedBytes: number;
 }
 
-export interface URLFrontier {
+export interface IFrontier {
     add(url: string, options?: AddOptions): Promise<AddResult>;
     claimNext(workerId: string): Promise<Lease | null>;
     acknowledge(lease: Lease, result: CrawlResult): Promise<void>;

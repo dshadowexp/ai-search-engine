@@ -111,6 +111,8 @@ const unquote = (etag: string | undefined) => etag?.replace(/^"|"$/g, "");
 export interface S3BlobStoreOptions {
     region: string;
     bucket: string;
+    /** Optional custom endpoint, e.g. a local S3-compatible service. */
+    endpoint?: string;
     /** Prepended to every key; invisible to callers. */
     prefix?: string;
     maxObjectBytes?: number;
@@ -126,7 +128,10 @@ export class S3BlobStore implements BlobStore {
     private readonly ownsClient: boolean;
 
     constructor(opts: S3BlobStoreOptions) {
-        this.client = createS3Client({ region: opts.region });
+        this.client = createS3Client({
+            region: opts.region,
+            ...(opts.endpoint ? { endpoint: opts.endpoint } : {}),
+        });
         this.bucket = opts.bucket;
         this.prefix = opts.prefix ?? "";
         this.maxObjectBytes = opts.maxObjectBytes ?? 10 * 1024 * 1024;

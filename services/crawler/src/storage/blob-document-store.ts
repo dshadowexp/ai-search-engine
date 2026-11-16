@@ -1,19 +1,23 @@
 import type { CrawledDocument } from "@search/core";
-import type { DocumentStore } from "./document-store.ts";
-import {
-    DEFAULT_KEY_PREFIX,
+import { 
+    DEFAULT_KEY_PREFIX, 
+    saveDocumentVersion, 
     loadDocument,
     listDocumentVersions,
-    saveDocumentVersion,
-    type CrawlerBlobDocumentStoreOptions,
+    type BlobDocumentStoreOptions, 
+    type BlobStore, 
+    type DocumentStore, 
     type DocumentRef,
-    type SavedDocument,
-} from "./blob-document-store.ts";
-import type { BlobStore } from "./blob-store.ts";
+    type SavedDocument
+} from "@search/infra";
+
+export interface CrawlerBlobDocumentStoreOptions extends BlobDocumentStoreOptions {
+    blobs: Pick<BlobStore, "put" | "get" | "list" | "delete" | "close">;
+}
 
 /** Crawler-facing persistence operations. */
-export class CrawlerBlobDocumentStore implements DocumentStore {
-    private readonly blobs: Pick<BlobStore, "put" | "get" | "list" | "close">;
+export class CrawlerBlobDocumentStore implements DocumentStore<CrawledDocument, SavedDocument> {
+    private readonly blobs: Pick<BlobStore, "put" | "get" | "list" | "delete" | "close">;
     private readonly keyPrefix: string;
     private readonly maxDocumentBytes: number;
 
@@ -24,8 +28,8 @@ export class CrawlerBlobDocumentStore implements DocumentStore {
     }
 
     /** Idempotent: a retry of the same crawl produces the same key. */
-    async save(document: CrawledDocument): Promise<void> {
-        await this.saveVersion(document);
+    async save(document: CrawledDocument): Promise<SavedDocument> {
+        return await this.saveVersion(document);
     }
 
     async saveVersion(document: CrawledDocument, options: { signal?: AbortSignal } = {}): Promise<SavedDocument> {
@@ -38,9 +42,9 @@ export class CrawlerBlobDocumentStore implements DocumentStore {
         return latest ? loadDocument(this.blobs, latest, this.keyPrefix, this.maxDocumentBytes) : undefined;
     }
 
-    /** Every stored crawl of `url`, oldest first. */
+    /** The current snapshot for `url`, if one has been stored. */
     async listVersions(url: string): Promise<DocumentRef[]> {
-        return listDocumentVersions(this.blobs, url, this.keyPrefix);
+        return listDocumentVersions(this.blobs, url, this.keyPrefix, this.maxDocumentBytes);
     }
 
     async close(): Promise<void> {

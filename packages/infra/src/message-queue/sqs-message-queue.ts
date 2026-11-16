@@ -25,6 +25,7 @@ type MessageGroupId<T> = string | ((message: T) => string);
 
 export interface SqsMessageQueueOptions<T> {
     schema: MessageSchema<T>;
+    region?: string;
     delaySeconds?: number;
     attributes?: Record<string, MessageAttribute>;
     /** Required for FIFO queues; a function can preserve per-document ordering. */
@@ -45,8 +46,9 @@ const MAX_DELAY_SECONDS = 900;
 
 export class SqsMessageQueue<T> implements MessageQueue<T> {
     private readonly client: SQSClient;
+    private readonly ownsClient: boolean;
     private readonly options: SqsMessageQueueOptions<T>;
-    private readonly queueEndpoint: string;
+    private readonly queueUrl: string;
     private readonly fifo: boolean;
     private readonly messageAttributes: NonNullable<SendMessageCommandInput["MessageAttributes"]> | undefined;
 
@@ -71,16 +73,23 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
             throw new RangeError(`delaySeconds must be an integer between 0 and ${MAX_DELAY_SECONDS}`);
         }
 
-        this.queueEndpoint = queueUrl;
+        this.queueUrl = queueUrl;
         this.options = options;
+        this.ownsClient = client === undefined;
         this.messageAttributes = options.attributes ? this.formatMessageAttributes(options.attributes) : undefined;
-        this.client = client ?? createSqsClient({ region: process.env.AWS_REGION || "us-east-1" });
+        this.client = client ?? createSqsClient({
+            region: this.options.region?.trim() || process.env.AWS_REGION?.trim() || "us-east-1",
+        });
+    }
+
+    close(): void {
+        if (this.ownsClient) this.client.destroy();
     }
 
     async publish(messageBody: T): Promise<void> {
         const { message, body } = encodeQueueMessage(messageBody, this.options.schema);
         const params: SendMessageCommandInput = {
-            QueueUrl: this.queueEndpoint,
+            QueueUrl: this.queueUrl,
             MessageBody: body,
             ...(this.options.delaySeconds !== undefined ? { DelaySeconds: this.options.delaySeconds } : {}),
             ...(this.messageAttributes ? { MessageAttributes: this.messageAttributes } : {}),
@@ -131,6 +140,7 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
         };
     }
 
+    //----------------------------------- Private
     private async runWorker(
         handler: (message: T) => Promise<void>,
         signal: AbortSignal,
@@ -140,7 +150,7 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
             try {
                 const response = await this.client.send(
                     new ReceiveMessageCommand({
-                        QueueUrl: this.queueEndpoint,
+                        QueueUrl: this.queueUrl,
                         MaxNumberOfMessages: options.batchSize,
                         WaitTimeSeconds: options.waitTimeSeconds,
                         VisibilityTimeout: options.visibilityTimeoutSeconds,
@@ -185,7 +195,7 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
         if (!acknowledged.length) return;
 
         const response = await this.client.send(new DeleteMessageBatchCommand({
-            QueueUrl: this.queueEndpoint,
+            QueueUrl: this.queueUrl,
             Entries: acknowledged,
         }));
         for (const failure of response.Failed ?? []) {
@@ -226,7 +236,7 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
             if (renewing) return;
             renewing = true;
             void this.client.send(new ChangeMessageVisibilityCommand({
-                QueueUrl: this.queueEndpoint,
+                QueueUrl: this.queueUrl,
                 ReceiptHandle: receiptHandle,
                 VisibilityTimeout: visibilityTimeoutSeconds,
             })).catch((error: unknown) => {

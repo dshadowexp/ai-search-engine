@@ -1,19 +1,17 @@
-import { type Lease, type URLFrontier } from "./url-frontier/types.ts";
-import type { ResolvedCrawlerConfig } from "./config.ts";
-import { type HttpClient } from "./http-fetch/http-client.ts";
+import { type Lease, type IFrontier } from "./url-frontier/types.ts";
+import type { CrawlerDependencies, ResolvedCrawlerConfig } from "./config.ts";
 import { classifyResponse } from "./http-fetch/response-classifier.ts";
 import { detectContentKind, validateContent } from "./processor/content-detector.ts";
-import type {CrawlerStats, CrawlResult, DocumentProcessor, ResponseHead } from "./types.ts";
-import { type DocumentStore, LogStream } from "@search/infra";
-import { sleep, CrawledDocument } from "@search/core";
+import type {CrawlerStats, CrawlResult, ResponseHead } from "./types.ts";
+import { InfraError, LogStream } from "@search/infra";
+import { sleep, type CrawledDocument } from "@search/core";
 import { FetchError } from "./errors.ts";
 import { StaleLeaseError } from "./url-frontier/errors.ts";
+import { createCrawledDocumentMessage } from "./queue/crawled-document-message.ts";
+import { ProcessorRouter } from "./processor/processor-router.ts";
 
-export interface CrawlerDependencies {
-    frontier: URLFrontier;
-    httpClient: HttpClient;
-    processor: DocumentProcessor;
-    documentStore: DocumentStore;
+export interface WorkerDependences extends CrawlerDependencies {
+    processor: ProcessorRouter;
 }
 
 interface Outcome {
@@ -39,13 +37,13 @@ const MIN_HEARTBEAT_MS = 10;
  * concurrency and crawl delay, retry/backoff, deduplication and admission of discovered links.
  */
 export class CrawlerWorker {
-    private readonly deps: CrawlerDependencies;
+    private readonly deps: WorkerDependences;
     private readonly config: ResolvedCrawlerConfig;
     readonly workerId: string;
     private readonly stats: CrawlerStats;
 
     constructor(
-        deps: CrawlerDependencies,
+        deps: WorkerDependences,
         config: ResolvedCrawlerConfig,
         workerId: string,
         stats: CrawlerStats,
@@ -66,10 +64,12 @@ export class CrawlerWorker {
                 await sleep(MAX_WAIT_MS, signal);
                 continue;
             }
+
             if (!lease) {
                 await this.waitForWork(signal);
                 continue;
             }
+            
             await this.processLease(lease, signal);
         }
     }
@@ -81,6 +81,7 @@ export class CrawlerWorker {
 
         try {
             const outcome = await this.crawl(lease, AbortSignal.any([signal, job.signal]));
+
             if (heartbeat.lost) {
                 this.stats.staleLeases++; // another worker owns this URL now; drop our work
                 return;
@@ -94,13 +95,15 @@ export class CrawlerWorker {
             // Persist BEFORE acknowledging. A crash in between just means the URL is crawled again
             // (the store is idempotent). Discovered links are enqueued by acknowledge() itself.
             if (outcome.document) {
-                LogStream.getInstance().log(JSON.stringify(outcome.document))
-                await this.deps.documentStore.save(outcome.document);
+                const reference = await this.deps.documentStore.save(outcome.document);
+                await this.deps.indexQueue.publish(createCrawledDocumentMessage(reference));
                 this.stats.pagesStored++;
             }
 
             await this.report(heartbeat.lease, outcome.result);
         } catch (err) {
+            if (err instanceof InfraError)
+                console.log(err.message);
             await this.recover(heartbeat, signal, err);
         } finally {
             heartbeat.stop();

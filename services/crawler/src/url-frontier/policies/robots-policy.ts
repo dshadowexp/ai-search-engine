@@ -119,18 +119,29 @@ export class HttpRobotsPolicy implements RobotsPolicy {
                 headers: { "user-agent": this.userAgent },
                 signal: AbortSignal.timeout(this.timeoutMs),
             });
+
             if (res.status >= 300 && res.status < 400) {
                 const loc = res.headers.get("location");
-                if (!loc) throw new Error("robots.txt redirect without Location");
+                if (!loc) 
+                    throw new Error("robots.txt redirect without Location");
+
                 const next = new URL(loc, url);
-                if (next.origin !== origin) throw new Error("cross-origin robots.txt redirect");
+                if (next.origin !== origin) 
+                    throw new Error("cross-origin robots.txt redirect");
+
                 url = next.href;
                 continue;
             }
-            if (res.status === 429 || res.status >= 500) throw new Error(`robots.txt HTTP ${res.status}`);
-            if (res.status >= 400) return ALLOW_ALL; // no robots.txt => no restrictions
+
+            if (res.status === 429 || res.status >= 500) 
+                throw new Error(`robots.txt HTTP ${res.status}`);
+
+            if (res.status >= 400) 
+                return ALLOW_ALL; // no robots.txt => no restrictions
+
             return parseRobotsTxt((await res.text()).slice(0, 512 * 1024), this.userAgent);
         }
+        
         throw new Error("too many robots.txt redirects");
     }  
 }

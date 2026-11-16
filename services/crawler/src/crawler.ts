@@ -1,7 +1,11 @@
 import type { AddOptions, AddResult, CrawlerStats } from "./types.ts";
 import { sleep } from "@search/core";
-import { resolveCrawlerConfig, type CrawlerConfig, type ResolvedCrawlerConfig } from "./config.ts";
-import { type CrawlerDependencies, CrawlerWorker } from "./worker.ts";
+import { type CrawlerDependencies, resolveCrawlerConfig, type CrawlerConfig, type ResolvedCrawlerConfig } from "./config.ts";
+import { CrawlerWorker } from "./worker.ts";
+import { ProcessorRouter } from "./processor/processor-router.ts";
+import { HtmlProcessor } from "./processor/html-parser.ts";
+import { XmlProcessor } from "./processor/xml-parser.ts";
+import { ImageProcessor } from "./processor/image-parser.ts";
 
 /** A bounded pool of workers. Global concurrency lives here; per-host limits live in the frontier. */
 export class Crawler {
@@ -27,8 +31,9 @@ export class Crawler {
         deps: CrawlerDependencies,
         config: CrawlerConfig,
     ) {
-        this.deps = deps;
         this.config = resolveCrawlerConfig(config);
+        this.deps = deps;
+        
     }
 
     async seed(urls: string[], options: AddOptions = {}): Promise<AddResult[]> {
@@ -44,9 +49,15 @@ export class Crawler {
         if (this.controller) 
             return;
 
+        const processor = new ProcessorRouter({
+            html: new HtmlProcessor(this.config),
+            xml: new XmlProcessor(this.config),
+            image: new ImageProcessor(),
+        });
+        
         const controller = (this.controller = new AbortController());
         for (let i = 0; i < this.config.concurrency; i++) {
-            const worker = new CrawlerWorker(this.deps, this.config, `crawler-${process.pid}-${i}`, this.stats);
+            const worker = new CrawlerWorker({ ...this.deps, processor }, this.config, `crawler-${process.pid}-${i}`, this.stats);
             this.running.push(worker.run(controller.signal));
         }
     }
