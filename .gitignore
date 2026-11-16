@@ -9,6 +9,7 @@ venv/
 *.egg-info/
 dist/
 build/
+volume/
 .eggs/
 
 .ipynb_checkpoints/
@@ -53,3 +54,9 @@ mlruns/
 *.bin
 *.h5
 .gstack/
+
+go.work
+go.work.sum
+
+services/*/bin/
+infrastructure/*/volume/

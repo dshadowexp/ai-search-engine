@@ -25,13 +25,14 @@ _sym_db = _symbol_database.Default()
 from v1 import common_pb2 as v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18v1/semantic_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\"\xb7\x01\n\rSearchRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n\x05top_k\x18\x02 \x01(\rR\x04topK\x12?\n\x07\x66ilters\x18\x03 \x03(\x0b\x32%.search.v1.SearchRequest.FiltersEntryR\x07\x66ilters\x1a:\n\x0c\x46iltersEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"@\n\x0eSearchResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results\"p\n\rRerankRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x34\n\ncandidates\x18\x02 \x03(\x0b\x32\x14.search.v1.SearchHitR\ncandidates\x12\x13\n\x05top_k\x18\x03 \x01(\rR\x04topK\"@\n\x0eRerankResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results2\xd7\x01\n\x15SemanticSearchService\x12=\n\x06Search\x12\x18.search.v1.SearchRequest\x1a\x19.search.v1.SearchResponse\x12=\n\x06Rerank\x12\x18.search.v1.RerankRequest\x1a\x19.search.v1.RerankResponse\x12@\n\x0cSearchStream\x12\x18.search.v1.SearchRequest\x1a\x14.search.v1.SearchHit0\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18v1/semantic_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\"\xb7\x01\n\rSearchRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n\x05top_k\x18\x02 \x01(\rR\x04topK\x12?\n\x07\x66ilters\x18\x03 \x03(\x0b\x32%.search.v1.SearchRequest.FiltersEntryR\x07\x66ilters\x1a:\n\x0c\x46iltersEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"@\n\x0eSearchResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results\"p\n\rRerankRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x34\n\ncandidates\x18\x02 \x03(\x0b\x32\x14.search.v1.SearchHitR\ncandidates\x12\x13\n\x05top_k\x18\x03 \x01(\rR\x04topK\"@\n\x0eRerankResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results2\xd7\x01\n\x15SemanticSearchService\x12=\n\x06Search\x12\x18.search.v1.SearchRequest\x1a\x19.search.v1.SearchResponse\x12=\n\x06Rerank\x12\x18.search.v1.RerankRequest\x1a\x19.search.v1.RerankResponse\x12@\n\x0cSearchStream\x12\x18.search.v1.SearchRequest\x1a\x14.search.v1.SearchHit0\x01\x42\x1dZ\x1bsearch/gen/semanticsearchv1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v1.semantic_search_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
+  _globals['DESCRIPTOR']._loaded_options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z\033search/gen/semanticsearchv1'
   _globals['_SEARCHREQUEST_FILTERSENTRY']._loaded_options = None
   _globals['_SEARCHREQUEST_FILTERSENTRY']._serialized_options = b'8\001'
   _globals['_SEARCHREQUEST']._serialized_start=57

@@ -1,6 +1,19 @@
 version: v2
 
+inputs:
+  - directory: proto/search
+
 plugins:
+  # Go: message stubs
+  - remote: buf.build/protocolbuffers/go
+    out: gen/go
+    opt: paths=source_relative
+    
+  # Go: gRPC service stubs
+  - remote: buf.build/grpc/go
+    out: gen/go
+    opt: paths=source_relative
+    
   # Python: message stubs
   - remote: buf.build/protocolbuffers/python
     out: gen/python

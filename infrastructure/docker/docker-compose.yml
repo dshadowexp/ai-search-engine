@@ -39,7 +39,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4000
-      AI_URL: http://ai:5000
+      AI_GRPC_TARGET: ai:50051
       REDIS_URL: redis://redis:6379
 
     depends_on:
@@ -72,7 +72,7 @@ services:
       dockerfile: services/ai/Dockerfile
 
     expose:
-      - "5000"
+      - "50051"
 
     environment:
       MODEL_CACHE: /models
@@ -85,7 +85,7 @@ services:
         - CMD
         - python
         - -c
-        - "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+        - "import grpc; channel = grpc.insecure_channel('localhost:50051'); grpc.channel_ready_future(channel).result(timeout=5)"
       interval: 30s
       timeout: 10s
       retries: 3
@@ -106,7 +106,7 @@ services:
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379
-      AI_URL: http://ai:5000
+      AI_GRPC_TARGET: ai:50051
 
     depends_on:
       redis:
@@ -131,7 +131,7 @@ services:
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379
-      AI_URL: http://ai:5000
+      AI_GRPC_TARGET: ai:50051
 
     depends_on:
       redis:

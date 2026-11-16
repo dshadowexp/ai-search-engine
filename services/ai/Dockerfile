@@ -1,24 +1,33 @@
+FROM python:3.12-slim AS builder
 
-FROM python:3.12-slim AS base
+COPY --from=ghcr.io/astral-sh/uv:0.12.13 /uv /uvx /bin/
 
 WORKDIR /app
+
+COPY pyproject.toml uv.lock ./
+COPY gen/python/pyproject.toml gen/python/pyproject.toml
+COPY gen/python/v1 gen/python/v1
+COPY services/ai/pyproject.toml services/ai/pyproject.toml
+
+RUN uv sync \
+    --package ai \
+    --no-dev \
+    --frozen \
+    --no-editable \
+    --no-install-project
+
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies if needed
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app/services/ai
 
-# Install Python dependencies
-COPY services/ai/requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application source
+COPY --from=builder /app/.venv /app/.venv
 COPY services/ai/src ./src
 
-EXPOSE 5000
+ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "5000"]
+EXPOSE 50051
+
+CMD ["python", "-m", "src.main"]

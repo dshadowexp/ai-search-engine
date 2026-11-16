@@ -1,10 +1,8 @@
-import os
 import asyncio
 import logging
-from concurrent import futures
+import os
 
-import grpc
-from grpc.server import GrpcServer
+from src.grpc.server import GrpcServer
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +23,7 @@ async def serve_grpc():
     # server.add_service()
 
     await server.start()
-    logger.info("gRPC server running on :50051")
+    logger.info("gRPC server running on %s:%s", host, port)
 
     try:
         await server.wait_for_termination()
