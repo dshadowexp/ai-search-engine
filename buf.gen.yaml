@@ -1,0 +1,21 @@
+version: v2
+
+plugins:
+  # Python: message stubs
+  - remote: buf.build/protocolbuffers/python
+    out: gen/python
+
+  #Python gRPC service stubs
+  - remote: buf.build/grpc/python
+    out: gen/python
+
+  # Python: mypy type stubs (community plugin)
+  - remote: buf.build/community/nipunn1313-mypy
+    out: gen/python
+
+  # Typescript: Protobuf-ES (modern, works with Connect-RPC)
+  - remote: buf.build/bufbuild/es
+    out: gen/ts
+    opt: target=ts
+
+  

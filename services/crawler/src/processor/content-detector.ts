@@ -7,6 +7,9 @@ export function detectContentKind(contentType: string | null, body?: Uint8Array)
         case "text/html":
         case "application/xhtml+xml":
             return "html";
+        case "application/xml":
+        case "text/xml":
+            return "xml";
         case "application/pdf":
             return "pdf";
         case "application/json":
@@ -16,6 +19,7 @@ export function detectContentKind(contentType: string | null, body?: Uint8Array)
         case "application/octet-stream":
             return body ? sniffKind(body) : "unknown";
         default:
+            if (type.endsWith("+xml")) return "xml";
             return type.startsWith("image/") ? "image" : "other";
     }
 }
@@ -29,6 +33,9 @@ export function sniffKind(body: Uint8Array): ContentKind {
 
     if (head.startsWith("<!doctype html") || head.startsWith("<html")) 
         return "html";
+
+    if (head.startsWith("<?xml"))
+        return "xml";
 
     return "other";
 }

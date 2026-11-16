@@ -6,7 +6,7 @@ import type { CrawledDocument } from "@search/core";
  * between save() and acknowledge() means the URL is crawled again and saved again.
  */
 export interface DocumentStore {
-    save(document: CrawledDocument, key?: string | undefined): Promise<void>;
+    save(document: CrawledDocument): Promise<void>;
     get(url: string): Promise<CrawledDocument | undefined>;
 }
 

@@ -1,8 +1,11 @@
-export { normalizeUrl } from "./normalize-url.ts";
-export { sleep } from "./sleep.ts";
-export { isPublicHostname, isPublicIp } from "./ssrf-guard.ts";
-export { hashUrl } from "./hash-url.ts";
-export { PriorityQueue } from "./priority-queue.ts";
+export { normalizeUrl } from "./utils/normalize-url.ts";
+export { sleep } from "./utils/sleep.ts";
+export { isPublicHostname, isPublicIp } from "./utils/ssrf-guard.ts";
+export { hashUrl } from "./utils/hash-url.ts";
 
-export type { NormalizeOptions } from "./normalize-url.ts";
-export type { CrawledDocument } from "./types.ts";
+export { PriorityQueue } from "./data-structures/priority-queue.ts";
+
+export { crawledDocumentSchema } from "./schemas/crawled-document.ts"
+
+export type { NormalizeOptions } from "./utils/normalize-url.ts";
+export type { CrawledDocument } from "./schemas/crawled-document.ts";

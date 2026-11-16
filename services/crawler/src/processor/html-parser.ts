@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import type { DocumentProcessor, ProcessedPage, ProcessInput } from "../types.ts";
 import { extractDocument } from "./extract-document.ts";
 import { extractLinks } from "./extract-links.ts";
+import { decodeBody } from "./decode-body.ts";
 
 export interface HtmlProcessorConfig {
     maxLinksPerPage: number;
@@ -19,7 +20,7 @@ export class HtmlProcessor implements DocumentProcessor {
     }
 
     process(input: ProcessInput): ProcessedPage {
-        const $ = cheerio.load(input.html);
+        const $ = cheerio.load(decodeBody(input.body, input.contentType));
         const { noindex, nofollow } = this.cfg.respectMetaRobots ? readRobotsMeta($) : { noindex: false, nofollow: false };
 
         const links = nofollow ? [] : extractLinks($, input.url, { maxLinks: this.cfg.maxLinksPerPage, respectNofollow: this.cfg.respectNofollow });

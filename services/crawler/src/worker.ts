@@ -3,7 +3,6 @@ import type { ResolvedCrawlerConfig } from "./config.ts";
 import { type HttpClient } from "./http-fetch/http-client.ts";
 import { classifyResponse } from "./http-fetch/response-classifier.ts";
 import { detectContentKind, validateContent } from "./processor/content-detector.ts";
-import { decodeBody } from "./processor/decode-body.ts";
 import type {CrawlerStats, CrawlResult, DocumentProcessor, ResponseHead } from "./types.ts";
 import { type DocumentStore, LogStream } from "@search/infra";
 import { sleep, CrawledDocument } from "@search/core";
@@ -144,7 +143,9 @@ export class CrawlerWorker {
 
         const page = this.deps.processor.process({
             url: lease.url,
-            html: decodeBody(res.body, res.contentType),
+            kind: verdict.kind,
+            contentType: res.contentType,
+            body: res.body,
             fetchedAt: this.config.now(),
             depth: lease.depth,
             truncated: res.truncated,

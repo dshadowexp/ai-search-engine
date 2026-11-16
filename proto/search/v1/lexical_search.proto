@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package search.v1;
+
+// import "v1/common.proto";
+
+service EmbeddingService {
+  rpc GenerateEmbeddings(stream EmDocument)
+      returns (EmbeddingBatchResult);
+}
+
+message EmDocument {
+  string document_id = 1;
+  string url = 2;
+  string title = 3;
+  string content = 4;
+  uint64 version = 5;
+}
+
+message EmbeddingBatchResult {
+  repeated EmbeddingResult results = 1;
+}
+
+message EmbeddingResult {
+  string document_id = 1;
+  bool success = 2;
+  string error = 3;
+}

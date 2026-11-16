@@ -61,7 +61,7 @@ export interface CrawlJob {
 //     links: string[];
 //     fetchedAt: Date;
 // }
-export type ContentKind = "html" | "pdf" | "json" | "image" | "other";
+export type ContentKind = "html" | "xml" | "pdf" | "json" | "image" | "other";
 
 /** Status line + headers, available before the body is read. */
 export interface ResponseHead {
@@ -83,7 +83,9 @@ export interface HttpResponse extends ResponseHead {
 
 export interface ProcessInput {
     url: string;
-    html: string;
+    kind: ContentKind;
+    contentType: string | null;
+    body: Uint8Array;
     fetchedAt: number;
     depth: number;
     truncated: boolean;

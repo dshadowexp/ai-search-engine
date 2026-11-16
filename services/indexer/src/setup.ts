@@ -1,4 +1,5 @@
 import { DocumentIngestor } from "./ingestion/document-ingestor.js";
+import { CrawledDocumentQueueConsumer } from "./ingestion/crawled-document-queue-consumer.ts";
 import { Indexer } from "./indexer.ts";
 import { IndexingPipeline } from "./pipeline.ts";
 import { resolveIndexingConfig, type IndexingConfig } from "./config.ts";
@@ -8,18 +9,30 @@ import { InMemoryDocumentRepository, type DocumentRepository } from "./storage/d
 import { InMemoryIndexJobStore, type IndexJobStore } from "./storage/job-store.ts";
 import { InMemoryLexicalRepository, type LexicalRepository } from "./storage/lexical-repository.ts";
 import type { IndexingStats, IngestStats } from "./types.ts";
+import type { CrawledDocumentMessage, IndexerBlobDocuments, MessageQueueConsumer } from "@search/infra";
 
 export interface CreateIndexingPipelineOptions extends IndexingConfig {
     analyzer?: Analyzer;
     documents?: DocumentRepository;
     lexical?: LexicalRepository;
     jobs?: IndexJobStore;
+    /** Provide these together to load persisted crawl events into the indexer. */
+    blobDocuments?: IndexerBlobDocuments;
+    documentQueue?: MessageQueueConsumer<CrawledDocumentMessage>;
 }
 
 /** Wires document ingestion and lexical indexing around shared stores and one clock. */
 export function createIndexingPipeline(options: CreateIndexingPipelineOptions = {}) {
-    const { analyzer = new StandardAnalyzer(), ...configOptions } = options;
+    const {
+        analyzer = new StandardAnalyzer(),
+        blobDocuments,
+        documentQueue,
+        ...configOptions
+    } = options;
     const config = resolveIndexingConfig(configOptions);
+    if (Boolean(blobDocuments) !== Boolean(documentQueue)) {
+        throw new Error("blobDocuments and documentQueue must be provided together");
+    }
 
     const documents = options.documents ?? new InMemoryDocumentRepository();
     const lexical = options.lexical ?? new InMemoryLexicalRepository();
@@ -59,10 +72,14 @@ export function createIndexingPipeline(options: CreateIndexingPipelineOptions = 
     );
 
     const pipeline = new IndexingPipeline({ jobs, indexer, documents, lexical }, config, stats, ingestStats);
+    const documentConsumer = documentQueue && blobDocuments
+        ? new CrawledDocumentQueueConsumer(documentQueue, blobDocuments, ingestor)
+        : undefined;
 
     return {
         pipeline,
         ingestor,
+        documentConsumer,
         // search,
         documents,
         lexical,

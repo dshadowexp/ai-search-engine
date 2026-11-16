@@ -1,0 +1,14 @@
+[project]
+name = "search-ai-root"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.uv.workspace]
+
+members = [
+    "services/ai",
+    "gen/python"
+]
+
+[tool.uv.sources]
+shared = { workspace = true }
