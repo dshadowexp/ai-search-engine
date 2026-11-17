@@ -1,10 +1,10 @@
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from math import isfinite
 from typing import Protocol
 
-from preprocessing.chunker import DocumentChunk
-from retrieval.similarity import cosine_similarity
+from ..preprocessing.chunker import DocumentChunk
+from ..retrieval.similarity import cosine_similarity
 
 
 @dataclass(frozen=True)
@@ -16,7 +16,12 @@ class VectorSearchResult:
 class VectorRepository(Protocol):
     def upsert(self, chunks: Sequence[DocumentChunk], embeddings: Sequence[Sequence[float]]) -> None: ...
 
-    def search(self, query_vector: Sequence[float], limit: int) -> list[VectorSearchResult]: ...
+    def search(
+        self,
+        query_vector: Sequence[float],
+        limit: int,
+        filters: Mapping[str, str] | None = None,
+    ) -> list[VectorSearchResult]: ...
 
     def delete_document(self, document_id: str) -> None: ...
 
@@ -46,7 +51,12 @@ class InMemoryVectorRepository(VectorRepository):
         self._vectors.update(prepared)
         self._dimension = dimension
 
-    def search(self, query_vector: Sequence[float], limit: int) -> list[VectorSearchResult]:
+    def search(
+        self,
+        query_vector: Sequence[float],
+        limit: int,
+        filters: Mapping[str, str] | None = None,
+    ) -> list[VectorSearchResult]:
         if limit < 1:
             raise ValueError("limit must be positive")
         query = tuple(float(value) for value in query_vector)
@@ -58,6 +68,8 @@ class InMemoryVectorRepository(VectorRepository):
         matches = [
             VectorSearchResult(chunk, cosine_similarity(query, embedding))
             for chunk, embedding in self._vectors.values()
+            if filters is None
+            or all(chunk.metadata.get(key) == value for key, value in filters.items())
         ]
         return sorted(matches, key=lambda match: match.score, reverse=True)[:limit]
 

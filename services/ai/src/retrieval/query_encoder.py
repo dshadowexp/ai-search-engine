@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from typing import Protocol
 
-from preprocessing.text_normalizer import preprocess_text
+from ..preprocessing.text_normalizer import preprocess_text
 
 
 class QueryEmbeddingModel(Protocol):
@@ -12,7 +12,7 @@ class QueryEmbeddingModel(Protocol):
 class QueryEncoder:
     def __init__(self, model: QueryEmbeddingModel | None = None):
         if model is None:
-            from embeddings.model import EmbeddingModel
+            from ..embeddings.model import EmbeddingModel
 
             model = EmbeddingModel()
         self.model = model

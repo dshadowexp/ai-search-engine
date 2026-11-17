@@ -1,6 +1,9 @@
 from collections.abc import Callable
 
+from v1 import semantic_search_pb2_grpc
+
 import grpc
+from src.grpc.services.semantic_search import SemanticSearchServicer
 
 ServiceRegistration = Callable[[grpc.aio.Server], None]
 
@@ -23,6 +26,14 @@ class GrpcServer:
         if self._started or self._closed:
             raise RuntimeError("gRPC services must be registered before the server starts")
         register(self._server)
+
+    def add_semantic_search_service(self, servicer: SemanticSearchServicer) -> None:
+        self.add_service(
+            lambda server: semantic_search_pb2_grpc.add_SemanticSearchServiceServicer_to_server(
+                servicer,
+                server,
+            )
+        )
 
     async def start(self) -> None:
         if self._closed:

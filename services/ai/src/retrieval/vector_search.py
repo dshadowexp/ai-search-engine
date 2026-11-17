@@ -1,7 +1,7 @@
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Protocol
 
-from storage.vector_store import VectorRepository, VectorSearchResult
+from ..storage.vector_store import VectorRepository, VectorSearchResult
 
 
 class QueryVectorEncoder(Protocol):
@@ -13,9 +13,14 @@ class VectorSearch:
         self.encoder = encoder
         self.repository = repository
 
-    def search(self, query: str, limit: int = 10) -> list[VectorSearchResult]:
+    def search(
+        self,
+        query: str,
+        limit: int = 10,
+        filters: Mapping[str, str] | None = None,
+    ) -> list[VectorSearchResult]:
         if not query.strip():
             raise ValueError("query must not be empty")
         if limit < 1:
             raise ValueError("limit must be positive")
-        return self.repository.search(self.encoder.encode(query), limit)
+        return self.repository.search(self.encoder.encode(query), limit, filters)

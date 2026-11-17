@@ -1,6 +1,6 @@
 import unicodedata
 
-from preprocessing.cleaner import clean_text
+from .cleaner import clean_text
 
 
 def normalize_text(text: str) -> str:

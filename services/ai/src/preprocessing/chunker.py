@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any
 
-from preprocessing.text_normalizer import preprocess_text
+from .text_normalizer import preprocess_text
+
 
 @dataclass(frozen=True)
 class DocumentChunk:
