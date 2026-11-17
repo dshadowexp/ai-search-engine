@@ -19,6 +19,7 @@ export const crawlerEnvSchema = z.object({
     S3_BUCKET: z.string().trim().min(1),
     S3_REGION: optionalRegionSchema,
     S3_ENDPOINT: optionalHttpUrlSchema,
+    SQS_ENDPOINT: optionalHttpUrlSchema,
     SQS_QUEUE_URL: httpUrlSchema,
 }).transform((env) => ({
     awsRegion: env.AWS_REGION,
@@ -26,4 +27,5 @@ export const crawlerEnvSchema = z.object({
     s3Region: env.S3_REGION ?? env.AWS_REGION,
     ...(env.S3_ENDPOINT ? { s3Endpoint: env.S3_ENDPOINT } : {}),
     sqsQueueUrl: env.SQS_QUEUE_URL,
+    ...(env.SQS_ENDPOINT ? { sqsEndpoint: env.S3_ENDPOINT } : {}),
 }));

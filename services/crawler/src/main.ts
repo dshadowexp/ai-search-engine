@@ -18,7 +18,7 @@ async function startCrawler() {
         blobs: new S3BlobStore({
             bucket: config.s3Bucket,
             region: config.s3Region,
-            ...(config.s3Endpoint ? { endpoint: config.s3Endpoint } : {}),
+            ...(config.s3Endpoint ? { endpoint: config.s3Endpoint } : { }),
             ownsClient: true,
         }),
     });
@@ -26,6 +26,7 @@ async function startCrawler() {
     const indexQueue = new SqsMessageQueue<CrawledDocumentMessage>(config.sqsQueueUrl, {
         schema: crawledDocumentMessageSchema,
         region: config.awsRegion,
+        ...(config.sqsEndpoint ? { endpoint: config.sqsEndpoint } : { }),
         ...(new URL(config.sqsQueueUrl).pathname.endsWith(".fifo")
             ? { messageGroupId: (message) => message.document.documentId }
             : {}),

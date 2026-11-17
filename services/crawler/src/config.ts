@@ -9,7 +9,7 @@ export interface CrawlerDependencies {
     frontier: IFrontier;
     httpClient: HttpClient;
     documentStore: DocumentStore<CrawledDocument, SavedDocument>;
-    indexQueue: MessageQueueProducer<CrawledDocumentMessage>
+    indexQueue?: MessageQueueProducer<CrawledDocumentMessage> | undefined;
 }
 
 export interface CrawlerConfig {

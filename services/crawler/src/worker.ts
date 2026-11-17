@@ -96,7 +96,8 @@ export class CrawlerWorker {
             // (the store is idempotent). Discovered links are enqueued by acknowledge() itself.
             if (outcome.document) {
                 const reference = await this.deps.documentStore.save(outcome.document);
-                await this.deps.indexQueue.publish(createCrawledDocumentMessage(reference));
+                if (this.deps.indexQueue)
+                    await this.deps.indexQueue.publish(createCrawledDocumentMessage(reference));
                 this.stats.pagesStored++;
             }
 
@@ -104,6 +105,9 @@ export class CrawlerWorker {
         } catch (err) {
             if (err instanceof InfraError)
                 console.log(err.message);
+            else {
+                console.log(err);
+            }
             await this.recover(heartbeat, signal, err);
         } finally {
             heartbeat.stop();

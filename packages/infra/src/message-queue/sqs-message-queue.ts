@@ -26,6 +26,7 @@ type MessageGroupId<T> = string | ((message: T) => string);
 export interface SqsMessageQueueOptions<T> {
     schema: MessageSchema<T>;
     region?: string;
+    endpoint?: string;
     delaySeconds?: number;
     attributes?: Record<string, MessageAttribute>;
     /** Required for FIFO queues; a function can preserve per-document ordering. */
@@ -79,6 +80,11 @@ export class SqsMessageQueue<T> implements MessageQueue<T> {
         this.messageAttributes = options.attributes ? this.formatMessageAttributes(options.attributes) : undefined;
         this.client = client ?? createSqsClient({
             region: this.options.region?.trim() || process.env.AWS_REGION?.trim() || "us-east-1",
+            forcePathStyle: false,
+            requestTimeoutMs: 30_000,
+            connectionTimeoutMs: 5_000,
+            maxAttempts: 3,
+            ...(this.options.endpoint ? { endpoint: this.options.endpoint } : {}),
         });
     }
 

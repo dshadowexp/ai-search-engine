@@ -203,7 +203,6 @@ export class InMemoryFrontier implements IFrontier {
         // Feed discovered URLs back in (after host state is consistent).
         if (result.outcome === "success") {
             for (const link of result.discoveredLinks ?? []) {
-                LogStream.getInstance().log(link, 'ADDING FRONTIER')
                 this.addSync(link, {
                     baseUrl: entry.canonicalUrl,
                     depth: entry.depth + 1,
