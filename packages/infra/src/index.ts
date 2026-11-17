@@ -1,5 +1,4 @@
 export {
-    DEFAULT_KEY_PREFIX,
     loadDocument,
     parseDocumentKey,
     saveDocumentVersion,
@@ -7,6 +6,7 @@ export {
 } from "./document-store/blob-document-store.ts";
 
 export { LogStream } from "./logging/log-stream.ts";
+export { InMemoryDocumentStore } from "./document-store/in-memory-document-store.ts";
 export { S3BlobStore } from "./document-store/blob-store.ts"
 export { SqsMessageQueue } from "./message-queue/sqs-message-queue.ts";
 export { BlobNotFoundError, InfraError } from "./errors.ts";

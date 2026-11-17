@@ -113,6 +113,11 @@ export interface S3BlobStoreOptions {
     bucket: string;
     /** Optional custom endpoint, e.g. a local S3-compatible service. */
     endpoint?: string;
+    /** Defaults to path-style for custom endpoints and virtual-host style for AWS. */
+    forcePathStyle?: boolean;
+    requestTimeoutMs?: number;
+    connectionTimeoutMs?: number;
+    maxAttempts?: number;
     /** Prepended to every key; invisible to callers. */
     prefix?: string;
     maxObjectBytes?: number;
@@ -130,6 +135,10 @@ export class S3BlobStore implements BlobStore {
     constructor(opts: S3BlobStoreOptions) {
         this.client = createS3Client({
             region: opts.region,
+            forcePathStyle: opts.forcePathStyle ?? Boolean(opts.endpoint),
+            requestTimeoutMs: opts.requestTimeoutMs ?? 30_000,
+            connectionTimeoutMs: opts.connectionTimeoutMs ?? 5_000,
+            maxAttempts: opts.maxAttempts ?? 3,
             ...(opts.endpoint ? { endpoint: opts.endpoint } : {}),
         });
         this.bucket = opts.bucket;

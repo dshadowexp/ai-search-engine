@@ -4,20 +4,20 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
-import type { SearchHit, SearchHitSchema } from "./common_pb";
-import { file_v1_common } from "./common_pb";
+import type { SearchHit } from "./common_pb.ts";
+import { file_v1_common } from "./common_pb.ts";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file v1/semantic_search.proto.
  */
 export const file_v1_semantic_search: GenFile = /*@__PURE__*/
-  fileDesc("Chh2MS9zZW1hbnRpY19zZWFyY2gucHJvdG8SCXNlYXJjaC52MSKVAQoNU2VhcmNoUmVxdWVzdBINCgVxdWVyeRgBIAEoCRINCgV0b3BfaxgCIAEoDRI2CgdmaWx0ZXJzGAMgAygLMiUuc2VhcmNoLnYxLlNlYXJjaFJlcXVlc3QuRmlsdGVyc0VudHJ5Gi4KDEZpbHRlcnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIjcKDlNlYXJjaFJlc3BvbnNlEiUKB3Jlc3VsdHMYASADKAsyFC5zZWFyY2gudjEuU2VhcmNoSGl0IlcKDVJlcmFua1JlcXVlc3QSDQoFcXVlcnkYASABKAkSKAoKY2FuZGlkYXRlcxgCIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQSDQoFdG9wX2sYAyABKA0iNwoOUmVyYW5rUmVzcG9uc2USJQoHcmVzdWx0cxgBIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQy1wEKFVNlbWFudGljU2VhcmNoU2VydmljZRI9CgZTZWFyY2gSGC5zZWFyY2gudjEuU2VhcmNoUmVxdWVzdBoZLnNlYXJjaC52MS5TZWFyY2hSZXNwb25zZRI9CgZSZXJhbmsSGC5zZWFyY2gudjEuUmVyYW5rUmVxdWVzdBoZLnNlYXJjaC52MS5SZXJhbmtSZXNwb25zZRJACgxTZWFyY2hTdHJlYW0SGC5zZWFyY2gudjEuU2VhcmNoUmVxdWVzdBoULnNlYXJjaC52MS5TZWFyY2hIaXQwAUIdWhtzZWFyY2gvZ2VuL3NlbWFudGljc2VhcmNodjFiBnByb3RvMw", [file_v1_common]);
+  fileDesc("Chh2MS9zZW1hbnRpY19zZWFyY2gucHJvdG8SCXNlYXJjaC52MSKXAQoOU1NlYXJjaFJlcXVlc3QSDQoFcXVlcnkYASABKAkSDQoFdG9wX2sYAiABKA0SNwoHZmlsdGVycxgDIAMoCzImLnNlYXJjaC52MS5TU2VhcmNoUmVxdWVzdC5GaWx0ZXJzRW50cnkaLgoMRmlsdGVyc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiOAoPU1NlYXJjaFJlc3BvbnNlEiUKB3Jlc3VsdHMYASADKAsyFC5zZWFyY2gudjEuU2VhcmNoSGl0IlcKDVJlcmFua1JlcXVlc3QSDQoFcXVlcnkYASABKAkSKAoKY2FuZGlkYXRlcxgCIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQSDQoFdG9wX2sYAyABKA0iNwoOUmVyYW5rUmVzcG9uc2USJQoHcmVzdWx0cxgBIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQiJQoUU3VtbWFyeVN0cmVhbVJlcXVlc3QSDQoFcXVlcnkYASABKAkiKAoVU3VtbWFyeVN0cmVhbVJlc3BvbnNlEg8KB3N1bW1hcnkYASABKAky7QEKFVNlbWFudGljU2VhcmNoU2VydmljZRI/CgZTZWFyY2gSGS5zZWFyY2gudjEuU1NlYXJjaFJlcXVlc3QaGi5zZWFyY2gudjEuU1NlYXJjaFJlc3BvbnNlEj0KBlJlcmFuaxIYLnNlYXJjaC52MS5SZXJhbmtSZXF1ZXN0Ghkuc2VhcmNoLnYxLlJlcmFua1Jlc3BvbnNlElQKDVN1bW1hcnlTdHJlYW0SHy5zZWFyY2gudjEuU3VtbWFyeVN0cmVhbVJlcXVlc3QaIC5zZWFyY2gudjEuU3VtbWFyeVN0cmVhbVJlc3BvbnNlMAFCHFoaY3J1d2wvZ2VuL3NlbWFudGljc2VhcmNodjFiBnByb3RvMw", [file_v1_common]);
 
 /**
- * @generated from message search.v1.SearchRequest
+ * @generated from message search.v1.SSearchRequest
  */
-export type SearchRequest = Message<"search.v1.SearchRequest"> & {
+export type SSearchRequest = Message<"search.v1.SSearchRequest"> & {
   /**
    * @generated from field: string query = 1;
    */
@@ -35,16 +35,16 @@ export type SearchRequest = Message<"search.v1.SearchRequest"> & {
 };
 
 /**
- * Describes the message search.v1.SearchRequest.
- * Use `create(SearchRequestSchema)` to create a new message.
+ * Describes the message search.v1.SSearchRequest.
+ * Use `create(SSearchRequestSchema)` to create a new message.
  */
-export const SearchRequestSchema: GenMessage<SearchRequest> = /*@__PURE__*/
+export const SSearchRequestSchema: GenMessage<SSearchRequest> = /*@__PURE__*/
   messageDesc(file_v1_semantic_search, 0);
 
 /**
- * @generated from message search.v1.SearchResponse
+ * @generated from message search.v1.SSearchResponse
  */
-export type SearchResponse = Message<"search.v1.SearchResponse"> & {
+export type SSearchResponse = Message<"search.v1.SSearchResponse"> & {
   /**
    * @generated from field: repeated search.v1.SearchHit results = 1;
    */
@@ -52,10 +52,10 @@ export type SearchResponse = Message<"search.v1.SearchResponse"> & {
 };
 
 /**
- * Describes the message search.v1.SearchResponse.
- * Use `create(SearchResponseSchema)` to create a new message.
+ * Describes the message search.v1.SSearchResponse.
+ * Use `create(SSearchResponseSchema)` to create a new message.
  */
-export const SearchResponseSchema: GenMessage<SearchResponse> = /*@__PURE__*/
+export const SSearchResponseSchema: GenMessage<SSearchResponse> = /*@__PURE__*/
   messageDesc(file_v1_semantic_search, 1);
 
 /**
@@ -103,6 +103,40 @@ export const RerankResponseSchema: GenMessage<RerankResponse> = /*@__PURE__*/
   messageDesc(file_v1_semantic_search, 3);
 
 /**
+ * @generated from message search.v1.SummaryStreamRequest
+ */
+export type SummaryStreamRequest = Message<"search.v1.SummaryStreamRequest"> & {
+  /**
+   * @generated from field: string query = 1;
+   */
+  query: string;
+};
+
+/**
+ * Describes the message search.v1.SummaryStreamRequest.
+ * Use `create(SummaryStreamRequestSchema)` to create a new message.
+ */
+export const SummaryStreamRequestSchema: GenMessage<SummaryStreamRequest> = /*@__PURE__*/
+  messageDesc(file_v1_semantic_search, 4);
+
+/**
+ * @generated from message search.v1.SummaryStreamResponse
+ */
+export type SummaryStreamResponse = Message<"search.v1.SummaryStreamResponse"> & {
+  /**
+   * @generated from field: string summary = 1;
+   */
+  summary: string;
+};
+
+/**
+ * Describes the message search.v1.SummaryStreamResponse.
+ * Use `create(SummaryStreamResponseSchema)` to create a new message.
+ */
+export const SummaryStreamResponseSchema: GenMessage<SummaryStreamResponse> = /*@__PURE__*/
+  messageDesc(file_v1_semantic_search, 5);
+
+/**
  * @generated from service search.v1.SemanticSearchService
  */
 export const SemanticSearchService: GenService<{
@@ -113,8 +147,8 @@ export const SemanticSearchService: GenService<{
    */
   search: {
     methodKind: "unary";
-    input: typeof SearchRequestSchema;
-    output: typeof SearchResponseSchema;
+    input: typeof SSearchRequestSchema;
+    output: typeof SSearchResponseSchema;
   },
   /**
    * Reranks an existing candidate set for a query.
@@ -129,12 +163,12 @@ export const SemanticSearchService: GenService<{
   /**
    * Streams ranked results as they are produced by the retrieval pipeline.
    *
-   * @generated from rpc search.v1.SemanticSearchService.SearchStream
+   * @generated from rpc search.v1.SemanticSearchService.SummaryStream
    */
-  searchStream: {
+  summaryStream: {
     methodKind: "server_streaming";
-    input: typeof SearchRequestSchema;
-    output: typeof SearchHitSchema;
+    input: typeof SummaryStreamRequestSchema;
+    output: typeof SummaryStreamResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_v1_semantic_search, 0);

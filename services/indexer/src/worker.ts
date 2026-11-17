@@ -3,6 +3,7 @@ import type { ResolvedIndexingConfig } from "./config.ts";
 import type { Indexer } from "./indexer.ts";
 import type { IndexJobStore } from "./storage/job-store.ts";
 import { StaleStageLeaseError, type IndexJob, type IndexStage, type IndexingStats, type StageLease } from "./types.ts";
+import { LogStream } from "@search/infra";
 
 export interface IndexerDependencies {
     jobs: IndexJobStore; 
@@ -21,13 +22,25 @@ const MIN_HEARTBEAT_MS = 10;
 
 /** Claim a stage -> run it -> complete -> publish. Stateless: all durable state is in the stores. */
 export class IndexerWorker {
+    private readonly deps: IndexerDependencies;
+    private readonly config: ResolvedIndexingConfig;
+    readonly workerId: string;
+    private readonly stages: readonly IndexStage[];
+    private readonly stats: IndexingStats;
+
     constructor(
-        private readonly deps: IndexerDependencies,
-        private readonly config: ResolvedIndexingConfig,
-        readonly workerId: string,
-        private readonly stages: readonly IndexStage[],
-        private readonly stats: IndexingStats,
-    ) {}
+        deps: IndexerDependencies,
+        config: ResolvedIndexingConfig,
+        workerId: string,
+        stages: readonly IndexStage[],
+        stats: IndexingStats,
+    ) {
+        this.deps = deps;
+        this.config = config;
+        this.workerId = workerId;
+        this.stages = stages;
+        this.stats = stats;
+    }
 
     async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
@@ -55,6 +68,7 @@ export class IndexerWorker {
         this.stats.activeJobs++;
 
         try {
+            LogStream.getInstance().log(lease.documentId, '\t[Indexing')
             await this.deps.indexer.execute(lease, AbortSignal.any([signal, job.signal]));
             if (heartbeat.lost) {
                 this.stats.staleLeases++;

@@ -5,10 +5,8 @@ import grpc
 from v1 import lexical_search_pb2 as v1_dot_lexical__search__pb2
 
 
-class EmbeddingServiceStub:
-    """import "v1/common.proto";
-
-    """
+class LexicalSearchServiceStub:
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -16,47 +14,44 @@ class EmbeddingServiceStub:
         Args:
             channel: A grpc.Channel.
         """
-        self.GenerateEmbeddings = channel.stream_unary(
-                '/search.v1.EmbeddingService/GenerateEmbeddings',
-                request_serializer=v1_dot_lexical__search__pb2.EmDocument.SerializeToString,
-                response_deserializer=v1_dot_lexical__search__pb2.EmbeddingBatchResult.FromString,
+        self.Search = channel.unary_unary(
+                '/search.v1.LexicalSearchService/Search',
+                request_serializer=v1_dot_lexical__search__pb2.LSearchRequest.SerializeToString,
+                response_deserializer=v1_dot_lexical__search__pb2.LSearchResponse.FromString,
                 _registered_method=True)
 
 
-class EmbeddingServiceServicer:
-    """import "v1/common.proto";
+class LexicalSearchServiceServicer:
+    """Missing associated documentation comment in .proto file."""
 
-    """
-
-    def GenerateEmbeddings(self, request_iterator, context):
-        """Missing associated documentation comment in .proto file."""
+    def Search(self, request, context):
+        """Searches the lexical index and returns the highest-ranked documents.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_EmbeddingServiceServicer_to_server(servicer, server):
+def add_LexicalSearchServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GenerateEmbeddings': grpc.stream_unary_rpc_method_handler(
-                    servicer.GenerateEmbeddings,
-                    request_deserializer=v1_dot_lexical__search__pb2.EmDocument.FromString,
-                    response_serializer=v1_dot_lexical__search__pb2.EmbeddingBatchResult.SerializeToString,
+            'Search': grpc.unary_unary_rpc_method_handler(
+                    servicer.Search,
+                    request_deserializer=v1_dot_lexical__search__pb2.LSearchRequest.FromString,
+                    response_serializer=v1_dot_lexical__search__pb2.LSearchResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'search.v1.EmbeddingService', rpc_method_handlers)
+            'search.v1.LexicalSearchService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('search.v1.EmbeddingService', rpc_method_handlers)
+    server.add_registered_method_handlers('search.v1.LexicalSearchService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class EmbeddingService:
-    """import "v1/common.proto";
-
-    """
+class LexicalSearchService:
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GenerateEmbeddings(request_iterator,
+    def Search(request,
             target,
             options=(),
             channel_credentials=None,
@@ -66,12 +61,12 @@ class EmbeddingService:
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_unary(
-            request_iterator,
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            '/search.v1.EmbeddingService/GenerateEmbeddings',
-            v1_dot_lexical__search__pb2.EmDocument.SerializeToString,
-            v1_dot_lexical__search__pb2.EmbeddingBatchResult.FromString,
+            '/search.v1.LexicalSearchService/Search',
+            v1_dot_lexical__search__pb2.LSearchRequest.SerializeToString,
+            v1_dot_lexical__search__pb2.LSearchResponse.FromString,
             options,
             channel_credentials,
             insecure,

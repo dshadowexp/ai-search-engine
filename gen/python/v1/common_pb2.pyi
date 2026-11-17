@@ -3,10 +3,8 @@
 isort:skip_file
 """
 
-from collections import abc as _abc
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from google.protobuf.internal import containers as _containers
 import builtins as _builtins
 import sys
 import typing as _typing
@@ -17,84 +15,6 @@ else:
     from typing_extensions import TypeAlias as _TypeAlias, Never as _Never
 
 DESCRIPTOR: _descriptor.FileDescriptor
-
-@_typing.final
-class Document(_message.Message):
-    DESCRIPTOR: _descriptor.Descriptor
-
-    @_typing.final
-    class MetadataEntry(_message.Message):
-        DESCRIPTOR: _descriptor.Descriptor
-
-        KEY_FIELD_NUMBER: _builtins.int
-        VALUE_FIELD_NUMBER: _builtins.int
-        key: _builtins.str
-        value: _builtins.str
-        def __init__(
-            self,
-            *,
-            key: _builtins.str = ...,
-            value: _builtins.str = ...,
-        ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
-        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
-        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-        def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-    ID_FIELD_NUMBER: _builtins.int
-    URL_FIELD_NUMBER: _builtins.int
-    TITLE_FIELD_NUMBER: _builtins.int
-    TEXT_FIELD_NUMBER: _builtins.int
-    METADATA_FIELD_NUMBER: _builtins.int
-    id: _builtins.str
-    url: _builtins.str
-    title: _builtins.str
-    text: _builtins.str
-    @_builtins.property
-    def metadata(self) -> _containers.ScalarMap[_builtins.str, _builtins.str]: ...
-    def __init__(
-        self,
-        *,
-        id: _builtins.str = ...,
-        url: _builtins.str = ...,
-        title: _builtins.str = ...,
-        text: _builtins.str = ...,
-        metadata: _abc.Mapping[_builtins.str, _builtins.str] | None = ...,
-    ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
-    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["id", b"id", "metadata", b"metadata", "text", b"text", "title", b"title", "url", b"url"]  # noqa: Y015
-    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-    def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-Global___Document: _TypeAlias = Document  # noqa: Y015
-
-@_typing.final
-class Embedding(_message.Message):
-    DESCRIPTOR: _descriptor.Descriptor
-
-    DOCUMENT_ID_FIELD_NUMBER: _builtins.int
-    VALUES_FIELD_NUMBER: _builtins.int
-    MODEL_FIELD_NUMBER: _builtins.int
-    document_id: _builtins.str
-    model: _builtins.str
-    @_builtins.property
-    def values(self) -> _containers.RepeatedScalarFieldContainer[_builtins.float]: ...
-    def __init__(
-        self,
-        *,
-        document_id: _builtins.str = ...,
-        values: _abc.Iterable[_builtins.float] | None = ...,
-        model: _builtins.str = ...,
-    ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
-    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["document_id", b"document_id", "model", b"model", "values", b"values"]  # noqa: Y015
-    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-    def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-Global___Embedding: _TypeAlias = Embedding  # noqa: Y015
 
 @_typing.final
 class SearchHit(_message.Message):

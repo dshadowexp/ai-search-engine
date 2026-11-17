@@ -24,22 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fv1/common.proto\x12\tsearch.v1\"\xd2\x01\n\x08\x44ocument\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n\x05title\x18\x03 \x01(\tR\x05title\x12\x12\n\x04text\x18\x04 \x01(\tR\x04text\x12=\n\x08metadata\x18\x05 \x03(\x0b\x32!.search.v1.Document.MetadataEntryR\x08metadata\x1a;\n\rMetadataEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"Z\n\tEmbedding\x12\x1f\n\x0b\x64ocument_id\x18\x01 \x01(\tR\ndocumentId\x12\x16\n\x06values\x18\x02 \x03(\x02R\x06values\x12\x14\n\x05model\x18\x03 \x01(\tR\x05model\"\x84\x01\n\tSearchHit\x12\x1f\n\x0b\x64ocument_id\x18\x01 \x01(\tR\ndocumentId\x12\x10\n\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n\x05title\x18\x03 \x01(\tR\x05title\x12\x18\n\x07snippet\x18\x04 \x01(\tR\x07snippet\x12\x14\n\x05score\x18\x05 \x01(\x02R\x05scoreB\x15Z\x13search/gen/commonv1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fv1/common.proto\x12\tsearch.v1\"\x84\x01\n\tSearchHit\x12\x1f\n\x0b\x64ocument_id\x18\x01 \x01(\tR\ndocumentId\x12\x10\n\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n\x05title\x18\x03 \x01(\tR\x05title\x12\x18\n\x07snippet\x18\x04 \x01(\tR\x07snippet\x12\x14\n\x05score\x18\x05 \x01(\x02R\x05scoreB\x14Z\x12\x63ruwl/gen/commonv1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v1.common_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\023search/gen/commonv1'
-  _globals['_DOCUMENT_METADATAENTRY']._loaded_options = None
-  _globals['_DOCUMENT_METADATAENTRY']._serialized_options = b'8\001'
-  _globals['_DOCUMENT']._serialized_start=31
-  _globals['_DOCUMENT']._serialized_end=241
-  _globals['_DOCUMENT_METADATAENTRY']._serialized_start=182
-  _globals['_DOCUMENT_METADATAENTRY']._serialized_end=241
-  _globals['_EMBEDDING']._serialized_start=243
-  _globals['_EMBEDDING']._serialized_end=333
-  _globals['_SEARCHHIT']._serialized_start=336
-  _globals['_SEARCHHIT']._serialized_end=468
+  _globals['DESCRIPTOR']._serialized_options = b'Z\022cruwl/gen/commonv1'
+  _globals['_SEARCHHIT']._serialized_start=31
+  _globals['_SEARCHHIT']._serialized_end=163
 # @@protoc_insertion_point(module_scope)

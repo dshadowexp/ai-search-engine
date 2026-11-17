@@ -1,7 +1,7 @@
 import { normalizeUrl, hashUrl, type CrawledDocument } from "@search/core";
-import { hashContent } from "../processor/content-hasher.js";
+import { hashContent } from "../processor/content-hasher.ts";
 import { normalizeLanguage, normalizeText } from "../processor/normalizer.ts";
-import type { DocumentRepository } from "../storage/document-repository.js";
+import type { DocumentRepository } from "../storage/document-repository.ts";
 import type { IndexJobStore } from "../storage/job-store.ts";
 import type { IndexDocument, IngestResult, IngestStats } from "../types.ts";
 

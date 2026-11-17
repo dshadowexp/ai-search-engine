@@ -19,96 +19,105 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EmbeddingService_GenerateEmbeddings_FullMethodName = "/search.v1.EmbeddingService/GenerateEmbeddings"
+	LexicalSearchService_Search_FullMethodName = "/search.v1.LexicalSearchService/Search"
 )
 
-// EmbeddingServiceClient is the client API for EmbeddingService service.
+// LexicalSearchServiceClient is the client API for LexicalSearchService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type EmbeddingServiceClient interface {
-	GenerateEmbeddings(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[EmDocument, EmbeddingBatchResult], error)
+type LexicalSearchServiceClient interface {
+	// Searches the lexical index and returns the highest-ranked documents.
+	Search(ctx context.Context, in *LSearchRequest, opts ...grpc.CallOption) (*LSearchResponse, error)
 }
 
-type embeddingServiceClient struct {
+type lexicalSearchServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewEmbeddingServiceClient(cc grpc.ClientConnInterface) EmbeddingServiceClient {
-	return &embeddingServiceClient{cc}
+func NewLexicalSearchServiceClient(cc grpc.ClientConnInterface) LexicalSearchServiceClient {
+	return &lexicalSearchServiceClient{cc}
 }
 
-func (c *embeddingServiceClient) GenerateEmbeddings(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[EmDocument, EmbeddingBatchResult], error) {
+func (c *lexicalSearchServiceClient) Search(ctx context.Context, in *LSearchRequest, opts ...grpc.CallOption) (*LSearchResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &EmbeddingService_ServiceDesc.Streams[0], EmbeddingService_GenerateEmbeddings_FullMethodName, cOpts...)
+	out := new(LSearchResponse)
+	err := c.cc.Invoke(ctx, LexicalSearchService_Search_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[EmDocument, EmbeddingBatchResult]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EmbeddingService_GenerateEmbeddingsClient = grpc.ClientStreamingClient[EmDocument, EmbeddingBatchResult]
-
-// EmbeddingServiceServer is the server API for EmbeddingService service.
-// All implementations must embed UnimplementedEmbeddingServiceServer
+// LexicalSearchServiceServer is the server API for LexicalSearchService service.
+// All implementations must embed UnimplementedLexicalSearchServiceServer
 // for forward compatibility.
-type EmbeddingServiceServer interface {
-	GenerateEmbeddings(grpc.ClientStreamingServer[EmDocument, EmbeddingBatchResult]) error
-	mustEmbedUnimplementedEmbeddingServiceServer()
+type LexicalSearchServiceServer interface {
+	// Searches the lexical index and returns the highest-ranked documents.
+	Search(context.Context, *LSearchRequest) (*LSearchResponse, error)
+	mustEmbedUnimplementedLexicalSearchServiceServer()
 }
 
-// UnimplementedEmbeddingServiceServer must be embedded to have
+// UnimplementedLexicalSearchServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedEmbeddingServiceServer struct{}
+type UnimplementedLexicalSearchServiceServer struct{}
 
-func (UnimplementedEmbeddingServiceServer) GenerateEmbeddings(grpc.ClientStreamingServer[EmDocument, EmbeddingBatchResult]) error {
-	return status.Error(codes.Unimplemented, "method GenerateEmbeddings not implemented")
+func (UnimplementedLexicalSearchServiceServer) Search(context.Context, *LSearchRequest) (*LSearchResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Search not implemented")
 }
-func (UnimplementedEmbeddingServiceServer) mustEmbedUnimplementedEmbeddingServiceServer() {}
-func (UnimplementedEmbeddingServiceServer) testEmbeddedByValue()                          {}
+func (UnimplementedLexicalSearchServiceServer) mustEmbedUnimplementedLexicalSearchServiceServer() {}
+func (UnimplementedLexicalSearchServiceServer) testEmbeddedByValue()                              {}
 
-// UnsafeEmbeddingServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EmbeddingServiceServer will
+// UnsafeLexicalSearchServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LexicalSearchServiceServer will
 // result in compilation errors.
-type UnsafeEmbeddingServiceServer interface {
-	mustEmbedUnimplementedEmbeddingServiceServer()
+type UnsafeLexicalSearchServiceServer interface {
+	mustEmbedUnimplementedLexicalSearchServiceServer()
 }
 
-func RegisterEmbeddingServiceServer(s grpc.ServiceRegistrar, srv EmbeddingServiceServer) {
-	// If the following call panics, it indicates UnimplementedEmbeddingServiceServer was
+func RegisterLexicalSearchServiceServer(s grpc.ServiceRegistrar, srv LexicalSearchServiceServer) {
+	// If the following call panics, it indicates UnimplementedLexicalSearchServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&EmbeddingService_ServiceDesc, srv)
+	s.RegisterService(&LexicalSearchService_ServiceDesc, srv)
 }
 
-func _EmbeddingService_GenerateEmbeddings_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(EmbeddingServiceServer).GenerateEmbeddings(&grpc.GenericServerStream[EmDocument, EmbeddingBatchResult]{ServerStream: stream})
+func _LexicalSearchService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LexicalSearchServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LexicalSearchService_Search_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LexicalSearchServiceServer).Search(ctx, req.(*LSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EmbeddingService_GenerateEmbeddingsServer = grpc.ClientStreamingServer[EmDocument, EmbeddingBatchResult]
-
-// EmbeddingService_ServiceDesc is the grpc.ServiceDesc for EmbeddingService service.
+// LexicalSearchService_ServiceDesc is the grpc.ServiceDesc for LexicalSearchService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var EmbeddingService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "search.v1.EmbeddingService",
-	HandlerType: (*EmbeddingServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+var LexicalSearchService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "search.v1.LexicalSearchService",
+	HandlerType: (*LexicalSearchServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "GenerateEmbeddings",
-			Handler:       _EmbeddingService_GenerateEmbeddings_Handler,
-			ClientStreams: true,
+			MethodName: "Search",
+			Handler:    _LexicalSearchService_Search_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "v1/lexical_search.proto",
 }

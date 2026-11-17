@@ -4,106 +4,68 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { SearchHit } from "./common_pb.ts";
+import { file_v1_common } from "./common_pb.ts";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file v1/lexical_search.proto.
  */
 export const file_v1_lexical_search: GenFile = /*@__PURE__*/
-  fileDesc("Chd2MS9sZXhpY2FsX3NlYXJjaC5wcm90bxIJc2VhcmNoLnYxIl8KCkVtRG9jdW1lbnQSEwoLZG9jdW1lbnRfaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXRpdGxlGAMgASgJEg8KB2NvbnRlbnQYBCABKAkSDwoHdmVyc2lvbhgFIAEoBCJDChRFbWJlZGRpbmdCYXRjaFJlc3VsdBIrCgdyZXN1bHRzGAEgAygLMhouc2VhcmNoLnYxLkVtYmVkZGluZ1Jlc3VsdCJGCg9FbWJlZGRpbmdSZXN1bHQSEwoLZG9jdW1lbnRfaWQYASABKAkSDwoHc3VjY2VzcxgCIAEoCBINCgVlcnJvchgDIAEoCTJiChBFbWJlZGRpbmdTZXJ2aWNlEk4KEkdlbmVyYXRlRW1iZWRkaW5ncxIVLnNlYXJjaC52MS5FbURvY3VtZW50Gh8uc2VhcmNoLnYxLkVtYmVkZGluZ0JhdGNoUmVzdWx0KAFCHFoac2VhcmNoL2dlbi9sZXhpY2Fsc2VhcmNodjFiBnByb3RvMw");
+  fileDesc("Chd2MS9sZXhpY2FsX3NlYXJjaC5wcm90bxIJc2VhcmNoLnYxIi4KDkxTZWFyY2hSZXF1ZXN0Eg0KBXF1ZXJ5GAEgASgJEg0KBXRvcF9rGAIgASgNIjgKD0xTZWFyY2hSZXNwb25zZRIlCgdyZXN1bHRzGAEgAygLMhQuc2VhcmNoLnYxLlNlYXJjaEhpdDJXChRMZXhpY2FsU2VhcmNoU2VydmljZRI/CgZTZWFyY2gSGS5zZWFyY2gudjEuTFNlYXJjaFJlcXVlc3QaGi5zZWFyY2gudjEuTFNlYXJjaFJlc3BvbnNlQhtaGWNydXdsL2dlbi9sZXhpY2Fsc2VhcmNodjFiBnByb3RvMw", [file_v1_common]);
 
 /**
- * @generated from message search.v1.EmDocument
+ * @generated from message search.v1.LSearchRequest
  */
-export type EmDocument = Message<"search.v1.EmDocument"> & {
+export type LSearchRequest = Message<"search.v1.LSearchRequest"> & {
   /**
-   * @generated from field: string document_id = 1;
+   * @generated from field: string query = 1;
    */
-  documentId: string;
+  query: string;
 
   /**
-   * @generated from field: string url = 2;
+   * @generated from field: uint32 top_k = 2;
    */
-  url: string;
-
-  /**
-   * @generated from field: string title = 3;
-   */
-  title: string;
-
-  /**
-   * @generated from field: string content = 4;
-   */
-  content: string;
-
-  /**
-   * @generated from field: uint64 version = 5;
-   */
-  version: bigint;
+  topK: number;
 };
 
 /**
- * Describes the message search.v1.EmDocument.
- * Use `create(EmDocumentSchema)` to create a new message.
+ * Describes the message search.v1.LSearchRequest.
+ * Use `create(LSearchRequestSchema)` to create a new message.
  */
-export const EmDocumentSchema: GenMessage<EmDocument> = /*@__PURE__*/
+export const LSearchRequestSchema: GenMessage<LSearchRequest> = /*@__PURE__*/
   messageDesc(file_v1_lexical_search, 0);
 
 /**
- * @generated from message search.v1.EmbeddingBatchResult
+ * @generated from message search.v1.LSearchResponse
  */
-export type EmbeddingBatchResult = Message<"search.v1.EmbeddingBatchResult"> & {
+export type LSearchResponse = Message<"search.v1.LSearchResponse"> & {
   /**
-   * @generated from field: repeated search.v1.EmbeddingResult results = 1;
+   * @generated from field: repeated search.v1.SearchHit results = 1;
    */
-  results: EmbeddingResult[];
+  results: SearchHit[];
 };
 
 /**
- * Describes the message search.v1.EmbeddingBatchResult.
- * Use `create(EmbeddingBatchResultSchema)` to create a new message.
+ * Describes the message search.v1.LSearchResponse.
+ * Use `create(LSearchResponseSchema)` to create a new message.
  */
-export const EmbeddingBatchResultSchema: GenMessage<EmbeddingBatchResult> = /*@__PURE__*/
+export const LSearchResponseSchema: GenMessage<LSearchResponse> = /*@__PURE__*/
   messageDesc(file_v1_lexical_search, 1);
 
 /**
- * @generated from message search.v1.EmbeddingResult
+ * @generated from service search.v1.LexicalSearchService
  */
-export type EmbeddingResult = Message<"search.v1.EmbeddingResult"> & {
+export const LexicalSearchService: GenService<{
   /**
-   * @generated from field: string document_id = 1;
+   * Searches the lexical index and returns the highest-ranked documents.
+   *
+   * @generated from rpc search.v1.LexicalSearchService.Search
    */
-  documentId: string;
-
-  /**
-   * @generated from field: bool success = 2;
-   */
-  success: boolean;
-
-  /**
-   * @generated from field: string error = 3;
-   */
-  error: string;
-};
-
-/**
- * Describes the message search.v1.EmbeddingResult.
- * Use `create(EmbeddingResultSchema)` to create a new message.
- */
-export const EmbeddingResultSchema: GenMessage<EmbeddingResult> = /*@__PURE__*/
-  messageDesc(file_v1_lexical_search, 2);
-
-/**
- * @generated from service search.v1.EmbeddingService
- */
-export const EmbeddingService: GenService<{
-  /**
-   * @generated from rpc search.v1.EmbeddingService.GenerateEmbeddings
-   */
-  generateEmbeddings: {
-    methodKind: "client_streaming";
-    input: typeof EmDocumentSchema;
-    output: typeof EmbeddingBatchResultSchema;
+  search: {
+    methodKind: "unary";
+    input: typeof LSearchRequestSchema;
+    output: typeof LSearchResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_v1_lexical_search, 0);

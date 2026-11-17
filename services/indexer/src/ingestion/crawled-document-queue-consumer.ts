@@ -1,4 +1,4 @@
-import type { CrawledDocumentMessage } from "@search/infra";
+import type { CrawledDocumentMessage } from "@search/core";
 import type { IndexerBlobDocuments } from "@search/infra";
 import type { ConsumeOptions, MessageQueueConsumer, QueueConsumer } from "@search/infra";
 import type { DocumentIngestor } from "./document-ingestor.ts";

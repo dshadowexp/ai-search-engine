@@ -1,15 +1,17 @@
-import { DocumentIngestor } from "./ingestion/document-ingestor.js";
+import { DocumentIngestor } from "./ingestion/document-ingestor.ts";
 import { CrawledDocumentQueueConsumer } from "./ingestion/crawled-document-queue-consumer.ts";
 import { Indexer } from "./indexer.ts";
-import { IndexingPipeline } from "./pipeline.ts";
+import { Pipeline } from "./pipeline.ts";
 import { resolveIndexingConfig, type IndexingConfig } from "./config.ts";
 import { LexicalIndexer } from "./lexical/lexical-indexer.ts";
+import { LexicalSearchService } from "./search/search-service.ts";
 import { StandardAnalyzer, type Analyzer } from "./processor/analyzer.ts";
 import { InMemoryDocumentRepository, type DocumentRepository } from "./storage/document-repository.ts";
 import { InMemoryIndexJobStore, type IndexJobStore } from "./storage/job-store.ts";
 import { InMemoryLexicalRepository, type LexicalRepository } from "./storage/lexical-repository.ts";
 import type { IndexingStats, IngestStats } from "./types.ts";
-import type { CrawledDocumentMessage, IndexerBlobDocuments, MessageQueueConsumer } from "@search/infra";
+import type { IndexerBlobDocuments, MessageQueueConsumer } from "@search/infra";
+import type { CrawledDocumentMessage } from "@search/core";
 
 export interface CreateIndexingPipelineOptions extends IndexingConfig {
     analyzer?: Analyzer;
@@ -65,13 +67,20 @@ export function createIndexingPipeline(options: CreateIndexingPipelineOptions = 
         stats,
     );
 
+    const searchService = new LexicalSearchService({
+        documents,
+        analyzer,
+        lexical,
+        bm25: config.bm25,
+    });
+
     const ingestor = new DocumentIngestor(
         { documents, jobs },
         { now: config.now, maxContentChars: config.maxContentChars },
         ingestStats,
     );
 
-    const pipeline = new IndexingPipeline({ jobs, indexer, documents, lexical }, config, stats, ingestStats);
+    const pipeline = new Pipeline({ jobs, indexer, documents, lexical }, config, stats, ingestStats);
     const documentConsumer = documentQueue && blobDocuments
         ? new CrawledDocumentQueueConsumer(documentQueue, blobDocuments, ingestor)
         : undefined;
@@ -80,7 +89,7 @@ export function createIndexingPipeline(options: CreateIndexingPipelineOptions = 
         pipeline,
         ingestor,
         documentConsumer,
-        // search,
+        searchService,
         documents,
         lexical,
         jobs,

@@ -1,7 +1,11 @@
+import { LexicalGrpcClient } from "../grpc/lexical-client.ts";
 import HTTPServer from "./http-server.ts";
 import { cleanseQuery, cors, helmet } from "./middlewares.ts";
 
 const serverApp = new HTTPServer();
+const lexicalGrpcClient = new LexicalGrpcClient({
+    target: "0.0.0.0:50052"
+})
 
 serverApp.beforeEach(cors);
 serverApp.beforeEach(helmet);
@@ -16,9 +20,12 @@ serverApp.get('/autocomplete', cleanseQuery, (req, res) => {
     res.end(JSON.stringify(suggestions));
 });
 
-serverApp.get('/search', cleanseQuery, (req, res) => {
+serverApp.get('/search', cleanseQuery, async (req, res) => {
     const q = req.query.get("q") ?? "";
     const page = Number(req.query.get("page") ?? "1");
+
+    const lexicalResults = await lexicalGrpcClient.search(q);
+    console.log(lexicalResults);
 
     const results: string[] = [];
 

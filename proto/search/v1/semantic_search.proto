@@ -8,22 +8,22 @@ import "v1/common.proto";
 
 service SemanticSearchService {
     // Embeds the query, retrieves candidates, and returns ranked results.
-    rpc Search(SearchRequest) returns (SearchResponse);
+    rpc Search(SSearchRequest) returns (SSearchResponse);
 
     // Reranks an existing candidate set for a query.
     rpc Rerank(RerankRequest) returns (RerankResponse);
 
     // Streams ranked results as they are produced by the retrieval pipeline.
-    rpc SearchStream(SearchRequest) returns (stream SearchHit);
+    rpc SummaryStream(SummaryStreamRequest) returns (stream SummaryStreamResponse);
 }
 
-message SearchRequest {
+message SSearchRequest {
     string query = 1;
     uint32 top_k = 2;
     map<string, string> filters = 3;
 }
 
-message SearchResponse {
+message SSearchResponse {
     repeated SearchHit results = 1;
 }
 
@@ -35,4 +35,12 @@ message RerankRequest {
 
 message RerankResponse {
     repeated SearchHit results = 1;
+}
+
+message SummaryStreamRequest {
+    string query = 1;
+}
+
+message SummaryStreamResponse {
+    string summary = 1;
 }

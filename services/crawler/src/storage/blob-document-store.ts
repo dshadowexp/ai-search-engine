@@ -1,6 +1,5 @@
 import type { CrawledDocument } from "@search/core";
 import { 
-    DEFAULT_KEY_PREFIX, 
     saveDocumentVersion, 
     loadDocument,
     listDocumentVersions,
@@ -23,7 +22,7 @@ export class CrawlerBlobDocumentStore implements DocumentStore<CrawledDocument, 
 
     constructor(options: CrawlerBlobDocumentStoreOptions) {
         this.blobs = options.blobs;
-        this.keyPrefix = options.keyPrefix ?? DEFAULT_KEY_PREFIX;
+        this.keyPrefix = options.keyPrefix ?? "";
         this.maxDocumentBytes = options.maxDocumentBytes ?? 5 * 1024 * 1024;
     }
 

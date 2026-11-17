@@ -4,27 +4,18 @@ package search.v1;
 
 option go_package = "cruwl/gen/lexicalsearchv1";
 
-// import "v1/common.proto";
+import "v1/common.proto";
 
-service EmbeddingService {
-  rpc GenerateEmbeddings(stream EmDocument)
-      returns (EmbeddingBatchResult);
+service LexicalSearchService {
+  // Searches the lexical index and returns the highest-ranked documents.
+  rpc Search(LSearchRequest) returns (LSearchResponse);
 }
 
-message EmDocument {
-  string document_id = 1;
-  string url = 2;
-  string title = 3;
-  string content = 4;
-  uint64 version = 5;
+message LSearchRequest {
+  string query = 1;
+  uint32 top_k = 2;
 }
 
-message EmbeddingBatchResult {
-  repeated EmbeddingResult results = 1;
-}
-
-message EmbeddingResult {
-  string document_id = 1;
-  bool success = 2;
-  string error = 3;
+message LSearchResponse {
+  repeated SearchHit results = 1;
 }

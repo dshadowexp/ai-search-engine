@@ -1,5 +1,6 @@
 import type { CrawledDocument } from "@search/core";
-import type { DocumentStore, SavedDocument } from "@search/infra";
+import type { DocumentStore } from "./document-store.ts";
+import type { SavedDocument } from "./blob-document-store.ts";
 
 export class InMemoryDocumentStore implements DocumentStore<CrawledDocument, SavedDocument> {
     private readonly docs = new Map<string, CrawledDocument>();

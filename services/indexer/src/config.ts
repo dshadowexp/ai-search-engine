@@ -1,5 +1,5 @@
-import { DEFAULT_BM25, type Bm25Params } from "./lexical/bm25.js";
-import type { PerField } from "./storage/lexical-repository.js";
+import { DEFAULT_BM25, type Bm25Params } from "./lexical/bm25.ts";
+import type { PerField } from "./storage/lexical-repository.ts";
 
 export interface IndexingConfig {
     /** Injectable clock (ms), as in the frontier and crawler. */

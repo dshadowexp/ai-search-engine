@@ -1,5 +1,4 @@
-import { type Lease, type IFrontier } from "./url-frontier/types.ts";
-import type { CrawlerDependencies, ResolvedCrawlerConfig } from "./config.ts";
+import { type Lease } from "./url-frontier/types.ts";
 import { classifyResponse } from "./http-fetch/response-classifier.ts";
 import { detectContentKind, validateContent } from "./processor/content-detector.ts";
 import type {CrawlerStats, CrawlResult, ResponseHead } from "./types.ts";
@@ -7,8 +6,9 @@ import { InfraError, LogStream } from "@search/infra";
 import { sleep, type CrawledDocument } from "@search/core";
 import { FetchError } from "./errors.ts";
 import { StaleLeaseError } from "./url-frontier/errors.ts";
-import { createCrawledDocumentMessage } from "./queue/crawled-document-message.ts";
+import { createCrawledDocumentMessage } from "@search/core";
 import { ProcessorRouter } from "./processor/processor-router.ts";
+import type { CrawlerDependencies, ResolvedCrawlerConfig } from "./crawler.ts";
 
 export interface WorkerDependences extends CrawlerDependencies {
     processor: ProcessorRouter;
@@ -157,11 +157,6 @@ export class CrawlerWorker {
             depth: lease.depth,
             truncated: res.truncated,
         });
-
-        LogStream.getInstance().log(
-            page.document?.links.length,
-            '\t[OUTCOME'
-        )
 
         return { 
             result: { outcome: "success", discoveredLinks: page.links }, 

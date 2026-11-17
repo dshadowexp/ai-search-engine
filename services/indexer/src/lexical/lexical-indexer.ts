@@ -1,6 +1,7 @@
-import type { Analyzer, Token } from "../processor/analyzer.js";
-import { FIELDS, perFieldZero, type Field, type LexicalEntry, type LexicalRepository, type TermEntry } from "../storage/lexical-repository.js";
-import type { IndexDocument } from "../types.js";
+import { LogStream } from "@search/infra";
+import type { Analyzer, Token } from "../processor/analyzer.ts";
+import { FIELDS, perFieldZero, type Field, type LexicalEntry, type LexicalRepository, type TermEntry } from "../storage/lexical-repository.ts";
+import type { IndexDocument } from "../types.ts";
 
 /** Field text: the title alone, and the description followed by the content. */
 export function fieldTexts(doc: IndexDocument): Record<Field, string> {
@@ -31,10 +32,16 @@ export function buildLexicalEntry(doc: IndexDocument, analyzer: Analyzer): Lexic
 }
 
 export class LexicalIndexer {
+    private readonly analyzer: Analyzer;
+    private readonly repository: LexicalRepository;
+
     constructor(
-        private readonly analyzer: Analyzer,
-        private readonly repository: LexicalRepository,
-    ) {}
+        analyzer: Analyzer,
+        repository: LexicalRepository,
+    ) {
+        this.analyzer = analyzer;
+        this.repository = repository;
+    }
 
     /** Idempotent: re-running replaces this version's postings, never duplicates them. */
     async index(doc: IndexDocument): Promise<{ terms: number }> {

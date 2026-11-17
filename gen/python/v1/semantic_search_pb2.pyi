@@ -20,7 +20,7 @@ else:
 DESCRIPTOR: _descriptor.FileDescriptor
 
 @_typing.final
-class SearchRequest(_message.Message):
+class SSearchRequest(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
     @_typing.final
@@ -63,10 +63,10 @@ class SearchRequest(_message.Message):
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___SearchRequest: _TypeAlias = SearchRequest  # noqa: Y015
+Global___SSearchRequest: _TypeAlias = SSearchRequest  # noqa: Y015
 
 @_typing.final
-class SearchResponse(_message.Message):
+class SSearchResponse(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
     RESULTS_FIELD_NUMBER: _builtins.int
@@ -83,7 +83,7 @@ class SearchResponse(_message.Message):
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___SearchResponse: _TypeAlias = SearchResponse  # noqa: Y015
+Global___SSearchResponse: _TypeAlias = SSearchResponse  # noqa: Y015
 
 @_typing.final
 class RerankRequest(_message.Message):
@@ -130,3 +130,41 @@ class RerankResponse(_message.Message):
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___RerankResponse: _TypeAlias = RerankResponse  # noqa: Y015
+
+@_typing.final
+class SummaryStreamRequest(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    QUERY_FIELD_NUMBER: _builtins.int
+    query: _builtins.str
+    def __init__(
+        self,
+        *,
+        query: _builtins.str = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["query", b"query"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___SummaryStreamRequest: _TypeAlias = SummaryStreamRequest  # noqa: Y015
+
+@_typing.final
+class SummaryStreamResponse(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SUMMARY_FIELD_NUMBER: _builtins.int
+    summary: _builtins.str
+    def __init__(
+        self,
+        *,
+        summary: _builtins.str = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["summary", b"summary"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___SummaryStreamResponse: _TypeAlias = SummaryStreamResponse  # noqa: Y015

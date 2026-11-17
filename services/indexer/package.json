@@ -12,7 +12,9 @@
   "keywords": [],
   "type": "module",
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
     "@search/core": "*",
-    "@search/infra": "*"
+    "@search/infra": "*",
+    "@search/proto-ts": "^1.0.0"
   }
 }

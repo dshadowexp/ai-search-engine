@@ -1,5 +1,4 @@
-import { type CrawlerConfig, resolveCrawlerConfig } from "./config.ts";
-import { Crawler } from "./crawler.ts";
+import { type CrawlerConfig, resolveCrawlerConfig, Crawler } from "./crawler.ts";
 import { type HttpClient, UndiciHttpClient } from "./http-fetch/http-client.ts";
 import type {
     SavedDocument,
@@ -10,8 +9,8 @@ import type {
 import { InMemoryFrontier, type FrontierConfig } from "./url-frontier/frontier.ts";
 import { HttpRobotsPolicy } from "./url-frontier/policies/robots-policy.ts";
 import type { CrawledDocument } from "@search/core";
-import type { CrawledDocumentMessage } from "./queue/crawled-document-message.ts";
-import { InMemoryDocumentStore } from "./storage/in-memory-document-store.ts";
+import type { CrawledDocumentMessage } from "@search/core";
+import { InMemoryDocumentStore } from "@search/infra"
 
 export interface CreateCrawlerOptions extends CrawlerConfig {
     frontier?: FrontierConfig;

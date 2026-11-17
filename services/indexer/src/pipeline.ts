@@ -1,13 +1,13 @@
 import { sleep } from "@search/core";
-import type { Indexer } from "./indexer.js";
-import { IndexerWorker } from "./worker.js";
-import type { ResolvedIndexingConfig } from "./config.js";
-import type { DocumentRepository } from "./storage/document-repository.js";
-import type { IndexJobStore } from "./storage/job-store.js";
-import type { CorpusStats, LexicalRepository } from "./storage/lexical-repository.js";
+import type { Indexer } from "./indexer.ts";
+import { IndexerWorker } from "./worker.ts";
+import type { ResolvedIndexingConfig } from "./config.ts";
+import type { DocumentRepository } from "./storage/document-repository.ts";
+import type { IndexJobStore } from "./storage/job-store.ts";
+import type { CorpusStats, LexicalRepository } from "./storage/lexical-repository.ts";
 import { INDEX_STAGES, type IndexStage, type IndexingStats, type IngestStats, type JobStats } from "./types.ts";
 
-export interface IndexingPipelineStats {
+export interface PipelineStats {
     ingest: IngestStats;
     indexing: IndexingStats;
     jobs: JobStats;
@@ -15,17 +15,36 @@ export interface IndexingPipelineStats {
 }
 
 /** Bounded worker pools, one per stage, plus a reconciler. The counterpart of `Crawler` for indexing. */
-export class IndexingPipeline {
+export class Pipeline {
+    private readonly deps: {
+        jobs: IndexJobStore;
+        indexer: Indexer;
+        documents: DocumentRepository;
+        lexical: LexicalRepository;
+    };
+    private readonly config: ResolvedIndexingConfig;
+    private readonly stats: IndexingStats;
+    private readonly ingestStats: IngestStats;
     private controller: AbortController | undefined;
     private running: Promise<void>[] = [];
     private reconciler?: NodeJS.Timeout;
 
     constructor(
-        private readonly deps: { jobs: IndexJobStore; indexer: Indexer; documents: DocumentRepository; lexical: LexicalRepository },
-        private readonly config: ResolvedIndexingConfig,
-        private readonly stats: IndexingStats,
-        private readonly ingestStats: IngestStats,
-    ) {}
+        deps: {
+            jobs: IndexJobStore;
+            indexer: Indexer;
+            documents: DocumentRepository;
+            lexical: LexicalRepository;
+        },
+        config: ResolvedIndexingConfig,
+        stats: IndexingStats,
+        ingestStats: IngestStats,
+    ) {
+        this.deps = deps;
+        this.config = config;
+        this.stats = stats;
+        this.ingestStats = ingestStats;
+    }
 
     start(): void {
         if (this.controller) return;
@@ -74,7 +93,7 @@ export class IndexingPipeline {
         return active.length;
     }
 
-    async getStats(): Promise<IndexingPipelineStats> {
+    async getStats(): Promise<PipelineStats> {
         return {
             ingest: { ...this.ingestStats },
             indexing: { ...this.stats, stagesCompleted: { ...this.stats.stagesCompleted } },

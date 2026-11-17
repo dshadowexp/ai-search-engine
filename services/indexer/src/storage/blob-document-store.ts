@@ -1,6 +1,5 @@
-import { CrawledDocument } from "@search/core";
+import type { CrawledDocument } from "@search/core";
 import {
-    DEFAULT_KEY_PREFIX,
     loadDocument,
     parseDocumentKey,
     BlobNotFoundError,
@@ -17,7 +16,7 @@ export class IndexerBlobDocumentStore {
 
     constructor(options: IndexerBlobDocumentStoreOptions) {
         this.blobs = options.blobs;
-        this.keyPrefix = options.keyPrefix ?? DEFAULT_KEY_PREFIX;
+        this.keyPrefix = options.keyPrefix ?? "";
         this.maxDocumentBytes = options.maxDocumentBytes ?? 5 * 1024 * 1024;
     }
 

@@ -10,71 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file v1/common.proto.
  */
 export const file_v1_common: GenFile = /*@__PURE__*/
-  fileDesc("Cg92MS9jb21tb24ucHJvdG8SCXNlYXJjaC52MSKmAQoIRG9jdW1lbnQSCgoCaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXRpdGxlGAMgASgJEgwKBHRleHQYBCABKAkSMwoIbWV0YWRhdGEYBSADKAsyIS5zZWFyY2gudjEuRG9jdW1lbnQuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiPwoJRW1iZWRkaW5nEhMKC2RvY3VtZW50X2lkGAEgASgJEg4KBnZhbHVlcxgCIAMoAhINCgVtb2RlbBgDIAEoCSJcCglTZWFyY2hIaXQSEwoLZG9jdW1lbnRfaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXRpdGxlGAMgASgJEg8KB3NuaXBwZXQYBCABKAkSDQoFc2NvcmUYBSABKAJCFVoTc2VhcmNoL2dlbi9jb21tb252MWIGcHJvdG8z");
-
-/**
- * @generated from message search.v1.Document
- */
-export type Document = Message<"search.v1.Document"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * @generated from field: string url = 2;
-   */
-  url: string;
-
-  /**
-   * @generated from field: string title = 3;
-   */
-  title: string;
-
-  /**
-   * @generated from field: string text = 4;
-   */
-  text: string;
-
-  /**
-   * @generated from field: map<string, string> metadata = 5;
-   */
-  metadata: { [key: string]: string };
-};
-
-/**
- * Describes the message search.v1.Document.
- * Use `create(DocumentSchema)` to create a new message.
- */
-export const DocumentSchema: GenMessage<Document> = /*@__PURE__*/
-  messageDesc(file_v1_common, 0);
-
-/**
- * @generated from message search.v1.Embedding
- */
-export type Embedding = Message<"search.v1.Embedding"> & {
-  /**
-   * @generated from field: string document_id = 1;
-   */
-  documentId: string;
-
-  /**
-   * @generated from field: repeated float values = 2;
-   */
-  values: number[];
-
-  /**
-   * @generated from field: string model = 3;
-   */
-  model: string;
-};
-
-/**
- * Describes the message search.v1.Embedding.
- * Use `create(EmbeddingSchema)` to create a new message.
- */
-export const EmbeddingSchema: GenMessage<Embedding> = /*@__PURE__*/
-  messageDesc(file_v1_common, 1);
+  fileDesc("Cg92MS9jb21tb24ucHJvdG8SCXNlYXJjaC52MSJcCglTZWFyY2hIaXQSEwoLZG9jdW1lbnRfaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXRpdGxlGAMgASgJEg8KB3NuaXBwZXQYBCABKAkSDQoFc2NvcmUYBSABKAJCFFoSY3J1d2wvZ2VuL2NvbW1vbnYxYgZwcm90bzM");
 
 /**
  * @generated from message search.v1.SearchHit
@@ -111,5 +47,5 @@ export type SearchHit = Message<"search.v1.SearchHit"> & {
  * Use `create(SearchHitSchema)` to create a new message.
  */
 export const SearchHitSchema: GenMessage<SearchHit> = /*@__PURE__*/
-  messageDesc(file_v1_common, 2);
+  messageDesc(file_v1_common, 0);
 

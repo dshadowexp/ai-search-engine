@@ -14,7 +14,7 @@ const httpUrlSchema = z.string().trim().url().refine(
 );
 const optionalHttpUrlSchema = z.preprocess(emptyStringAsUndefined, httpUrlSchema.optional());
 
-export const crawlerEnvSchema = z.object({
+export const envSchema = z.object({
     AWS_REGION: z.string().trim().min(1),
     S3_BUCKET: z.string().trim().min(1),
     S3_REGION: optionalRegionSchema,

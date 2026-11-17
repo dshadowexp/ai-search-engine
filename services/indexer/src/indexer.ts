@@ -1,8 +1,8 @@
-import type { LexicalIndexer } from "./lexical/lexical-indexer.js";
-import type { DocumentRepository } from "./storage/document-repository.js";
-import type { IndexJobStore } from "./storage/job-store.js";
-import type { LexicalRepository } from "./storage/lexical-repository.js";
-import { INDEX_STAGES, type IndexJob, type IndexingStats, type StageLease } from "./types.js";
+import type { LexicalIndexer } from "./lexical/lexical-indexer.ts";
+import type { DocumentRepository } from "./storage/document-repository.ts";
+import type { IndexJobStore } from "./storage/job-store.ts";
+import type { LexicalRepository } from "./storage/lexical-repository.ts";
+import { INDEX_STAGES, type IndexJob, type IndexingStats, type StageLease } from "./types.ts";
 
 export interface IndexerDependencies {
     documents: DocumentRepository;
@@ -15,11 +15,19 @@ export interface IndexerDependencies {
  * Coordinates lexical indexing and version publication. Workers own leases; this owns "what is searchable".
  */
 export class Indexer {
+    private readonly deps: IndexerDependencies;
+    private readonly cfg: { now: () => number };
+    private readonly stats: IndexingStats;
+
     constructor(
-        private readonly deps: IndexerDependencies,
-        private readonly cfg: { now: () => number },
-        private readonly stats: IndexingStats,
-    ) {}
+        deps: IndexerDependencies,
+        cfg: { now: () => number },
+        stats: IndexingStats,
+    ) {
+        this.deps = deps;
+        this.cfg = cfg;
+        this.stats = stats;
+    }
 
     /** Runs one stage for one document version. Idempotent: running it twice never duplicates data. */
     async execute(lease: StageLease, signal: AbortSignal): Promise<void> {

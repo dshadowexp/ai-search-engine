@@ -1,5 +1,5 @@
 import { Pool, PoolClient } from "pg";
-import { Database, Queryable } from "./database.ts";
+import { Database, Queryable } from "./db.ts";
 
 async function queryRows<R>(
     target: Pool | PoolClient,

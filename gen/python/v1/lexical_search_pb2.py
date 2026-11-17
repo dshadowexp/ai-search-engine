@@ -22,22 +22,21 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from v1 import common_pb2 as v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17v1/lexical_search.proto\x12\tsearch.v1\"\x89\x01\n\nEmDocument\x12\x1f\n\x0b\x64ocument_id\x18\x01 \x01(\tR\ndocumentId\x12\x10\n\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n\x05title\x18\x03 \x01(\tR\x05title\x12\x18\n\x07\x63ontent\x18\x04 \x01(\tR\x07\x63ontent\x12\x18\n\x07version\x18\x05 \x01(\x04R\x07version\"L\n\x14\x45mbeddingBatchResult\x12\x34\n\x07results\x18\x01 \x03(\x0b\x32\x1a.search.v1.EmbeddingResultR\x07results\"b\n\x0f\x45mbeddingResult\x12\x1f\n\x0b\x64ocument_id\x18\x01 \x01(\tR\ndocumentId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12\x14\n\x05\x65rror\x18\x03 \x01(\tR\x05\x65rror2b\n\x10\x45mbeddingService\x12N\n\x12GenerateEmbeddings\x12\x15.search.v1.EmDocument\x1a\x1f.search.v1.EmbeddingBatchResult(\x01\x42\x1cZ\x1asearch/gen/lexicalsearchv1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17v1/lexical_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\";\n\x0eLSearchRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n\x05top_k\x18\x02 \x01(\rR\x04topK\"A\n\x0fLSearchResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results2W\n\x14LexicalSearchService\x12?\n\x06Search\x12\x19.search.v1.LSearchRequest\x1a\x1a.search.v1.LSearchResponseB\x1bZ\x19\x63ruwl/gen/lexicalsearchv1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v1.lexical_search_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\032search/gen/lexicalsearchv1'
-  _globals['_EMDOCUMENT']._serialized_start=39
-  _globals['_EMDOCUMENT']._serialized_end=176
-  _globals['_EMBEDDINGBATCHRESULT']._serialized_start=178
-  _globals['_EMBEDDINGBATCHRESULT']._serialized_end=254
-  _globals['_EMBEDDINGRESULT']._serialized_start=256
-  _globals['_EMBEDDINGRESULT']._serialized_end=354
-  _globals['_EMBEDDINGSERVICE']._serialized_start=356
-  _globals['_EMBEDDINGSERVICE']._serialized_end=454
+  _globals['DESCRIPTOR']._serialized_options = b'Z\031cruwl/gen/lexicalsearchv1'
+  _globals['_LSEARCHREQUEST']._serialized_start=55
+  _globals['_LSEARCHREQUEST']._serialized_end=114
+  _globals['_LSEARCHRESPONSE']._serialized_start=116
+  _globals['_LSEARCHRESPONSE']._serialized_end=181
+  _globals['_LEXICALSEARCHSERVICE']._serialized_start=183
+  _globals['_LEXICALSEARCHSERVICE']._serialized_end=270
 # @@protoc_insertion_point(module_scope)

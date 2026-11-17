@@ -8,7 +8,7 @@ import {
     type JobStats,
     type StageLease,
     type StageStatus,
-} from "../types.js";
+} from "../types.ts";
 
 /**
  * Durable, lease-based work queue with one independently scheduled state machine PER STAGE
@@ -112,7 +112,9 @@ export class InMemoryIndexJobStore implements IndexJobStore {
 
         for (const stage of INDEX_STAGES) {
             const want = stages[stage];
-            if (!want) continue;
+            if (!want) 
+                continue;
+            
             const st = internal.job.stages[stage];
             this.processing.delete(`${id}|${stage}`); // a re-enqueue revokes any running lease
             this.setStatus(internal, stage, want);

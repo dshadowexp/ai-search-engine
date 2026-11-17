@@ -26,6 +26,24 @@ describe("lexical-only indexing pipeline", () => {
         assert.equal((await indexing.jobs.get(documentId, 1))?.stages.lexical.published, true);
     });
 
+    it("searches documents through the search service wired to the lexical index", async () => {
+        const indexing = createIndexingPipeline();
+        await indexing.ingestor.ingest(crawled("https://example.com/search", "distinctive searchable phrase", 1));
+
+        indexing.pipeline.start();
+        try {
+            await indexing.pipeline.waitUntilIdle({ pollMs: 1 });
+        } finally {
+            await indexing.pipeline.stop();
+        }
+
+        const response = await indexing.searchService.search("searchable");
+        assert.equal(response.strategy, "lexical");
+        assert.equal(response.hits.length, 1);
+        assert.equal(response.hits[0].url, "https://example.com/search");
+        assert.match(response.hits[0].snippet, /searchable/);
+    });
+
     it("replaces old lexical versions when a newer document version is published", async () => {
         const indexing = createIndexingPipeline();
         const documentId = hashUrl("https://example.com/a");

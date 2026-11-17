@@ -32,4 +32,21 @@ export class StaleReceiptError extends InfraError {
     }
 }
 
+export class DbError extends InfraError {
+    constructor(
+        kind: InfraErrorKind,
+        message: string,
+        options: { code?: string; constraint?: string; retryable?: boolean; cause?: unknown } = {},
+    ) {
+        super(kind, message, options);
+        this.name = "DbError";
+        this.code = options.code;
+        this.constraint = options.constraint;
+    }
+
+    /** SQLSTATE, e.g. "23505". */
+    readonly code?: string | undefined;
+    readonly constraint?: string | undefined;
+}
+
 export const invalid = (message: string) => new InfraError("invalid", message);

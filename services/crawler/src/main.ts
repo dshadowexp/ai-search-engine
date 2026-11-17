@@ -5,16 +5,17 @@ import {
     SqsMessageQueue,
 } from "@search/infra";
 import { createCrawler } from "./setup.ts";
-import { crawlerEnvSchema } from "./config/crawler.schema.ts";
-import { type CrawledDocumentMessage, crawledDocumentMessageSchema } from "./queue/crawled-document-message.ts";
+import { envSchema } from "./config/env-schema.ts";
+import { type CrawledDocumentMessage, crawledDocumentMessageSchema } from "@search/core";
 import { CrawlerBlobDocumentStore } from "./storage/blob-document-store.ts";
 
 async function startCrawler() {
-    const config = loadConfig(crawlerEnvSchema);
+    const config = loadConfig(envSchema);
 
     LogStream.getInstance().addStream(process.stdout);
 
     const documentStore = new CrawlerBlobDocumentStore({
+        keyPrefix: "crawleddocuments",
         blobs: new S3BlobStore({
             bucket: config.s3Bucket,
             region: config.s3Region,
@@ -40,11 +41,9 @@ async function startCrawler() {
         },
     );
 
-    let statsTimer: ReturnType<typeof setInterval> | undefined;
     let shutdownPromise: Promise<void> | undefined;
     const shutdown = () => {
         shutdownPromise ??= (async () => {
-            if (statsTimer) clearInterval(statsTimer);
             try {
                 await crawler.stop();
             } finally {
@@ -71,12 +70,7 @@ async function startCrawler() {
             // "https://readykare.com"
         ]);
         crawler.start();
-        statsTimer = setInterval(async () => {
-            LogStream.getInstance().log(await crawler.getStats());
-        }, 5000);
-        setTimeout(async () => {
-            await shutdown();
-        }, 20000)
+
     } catch (error) {
         await shutdown();
         throw error;

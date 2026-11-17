@@ -21,142 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Document struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Text          string                 `protobuf:"bytes,4,opt,name=text,proto3" json:"text,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Document) Reset() {
-	*x = Document{}
-	mi := &file_v1_common_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Document) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Document) ProtoMessage() {}
-
-func (x *Document) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_common_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Document.ProtoReflect.Descriptor instead.
-func (*Document) Descriptor() ([]byte, []int) {
-	return file_v1_common_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Document) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *Document) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-func (x *Document) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *Document) GetText() string {
-	if x != nil {
-		return x.Text
-	}
-	return ""
-}
-
-func (x *Document) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-type Embedding struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	DocumentId    string                 `protobuf:"bytes,1,opt,name=document_id,json=documentId,proto3" json:"document_id,omitempty"`
-	Values        []float32              `protobuf:"fixed32,2,rep,packed,name=values,proto3" json:"values,omitempty"`
-	Model         string                 `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Embedding) Reset() {
-	*x = Embedding{}
-	mi := &file_v1_common_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Embedding) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Embedding) ProtoMessage() {}
-
-func (x *Embedding) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_common_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Embedding.ProtoReflect.Descriptor instead.
-func (*Embedding) Descriptor() ([]byte, []int) {
-	return file_v1_common_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Embedding) GetDocumentId() string {
-	if x != nil {
-		return x.DocumentId
-	}
-	return ""
-}
-
-func (x *Embedding) GetValues() []float32 {
-	if x != nil {
-		return x.Values
-	}
-	return nil
-}
-
-func (x *Embedding) GetModel() string {
-	if x != nil {
-		return x.Model
-	}
-	return ""
-}
-
 type SearchHit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	DocumentId    string                 `protobuf:"bytes,1,opt,name=document_id,json=documentId,proto3" json:"document_id,omitempty"`
@@ -170,7 +34,7 @@ type SearchHit struct {
 
 func (x *SearchHit) Reset() {
 	*x = SearchHit{}
-	mi := &file_v1_common_proto_msgTypes[2]
+	mi := &file_v1_common_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -182,7 +46,7 @@ func (x *SearchHit) String() string {
 func (*SearchHit) ProtoMessage() {}
 
 func (x *SearchHit) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_common_proto_msgTypes[2]
+	mi := &file_v1_common_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -195,7 +59,7 @@ func (x *SearchHit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchHit.ProtoReflect.Descriptor instead.
 func (*SearchHit) Descriptor() ([]byte, []int) {
-	return file_v1_common_proto_rawDescGZIP(), []int{2}
+	return file_v1_common_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SearchHit) GetDocumentId() string {
@@ -237,28 +101,14 @@ var File_v1_common_proto protoreflect.FileDescriptor
 
 const file_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/common.proto\x12\tsearch.v1\"\xd2\x01\n" +
-	"\bDocument\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
-	"\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12\x12\n" +
-	"\x04text\x18\x04 \x01(\tR\x04text\x12=\n" +
-	"\bmetadata\x18\x05 \x03(\v2!.search.v1.Document.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"Z\n" +
-	"\tEmbedding\x12\x1f\n" +
-	"\vdocument_id\x18\x01 \x01(\tR\n" +
-	"documentId\x12\x16\n" +
-	"\x06values\x18\x02 \x03(\x02R\x06values\x12\x14\n" +
-	"\x05model\x18\x03 \x01(\tR\x05model\"\x84\x01\n" +
+	"\x0fv1/common.proto\x12\tsearch.v1\"\x84\x01\n" +
 	"\tSearchHit\x12\x1f\n" +
 	"\vdocument_id\x18\x01 \x01(\tR\n" +
 	"documentId\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12\x18\n" +
 	"\asnippet\x18\x04 \x01(\tR\asnippet\x12\x14\n" +
-	"\x05score\x18\x05 \x01(\x02R\x05scoreB\x15Z\x13search/gen/commonv1b\x06proto3"
+	"\x05score\x18\x05 \x01(\x02R\x05scoreB\x14Z\x12cruwl/gen/commonv1b\x06proto3"
 
 var (
 	file_v1_common_proto_rawDescOnce sync.Once
@@ -272,20 +122,16 @@ func file_v1_common_proto_rawDescGZIP() []byte {
 	return file_v1_common_proto_rawDescData
 }
 
-var file_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_v1_common_proto_goTypes = []any{
-	(*Document)(nil),  // 0: search.v1.Document
-	(*Embedding)(nil), // 1: search.v1.Embedding
-	(*SearchHit)(nil), // 2: search.v1.SearchHit
-	nil,               // 3: search.v1.Document.MetadataEntry
+	(*SearchHit)(nil), // 0: search.v1.SearchHit
 }
 var file_v1_common_proto_depIdxs = []int32{
-	3, // 0: search.v1.Document.metadata:type_name -> search.v1.Document.MetadataEntry
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_v1_common_proto_init() }
@@ -299,7 +145,7 @@ func file_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_common_proto_rawDesc), len(file_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

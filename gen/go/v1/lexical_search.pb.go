@@ -7,6 +7,7 @@
 package lexicalsearchv1
 
 import (
+	commonv1 "cruwl/gen/commonv1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -21,31 +22,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type EmDocument struct {
+type LSearchRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DocumentId    string                 `protobuf:"bytes,1,opt,name=document_id,json=documentId,proto3" json:"document_id,omitempty"`
-	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Content       string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Version       uint64                 `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
+	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	TopK          uint32                 `protobuf:"varint,2,opt,name=top_k,json=topK,proto3" json:"top_k,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EmDocument) Reset() {
-	*x = EmDocument{}
+func (x *LSearchRequest) Reset() {
+	*x = LSearchRequest{}
 	mi := &file_v1_lexical_search_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EmDocument) String() string {
+func (x *LSearchRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EmDocument) ProtoMessage() {}
+func (*LSearchRequest) ProtoMessage() {}
 
-func (x *EmDocument) ProtoReflect() protoreflect.Message {
+func (x *LSearchRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_lexical_search_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -57,67 +55,46 @@ func (x *EmDocument) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EmDocument.ProtoReflect.Descriptor instead.
-func (*EmDocument) Descriptor() ([]byte, []int) {
+// Deprecated: Use LSearchRequest.ProtoReflect.Descriptor instead.
+func (*LSearchRequest) Descriptor() ([]byte, []int) {
 	return file_v1_lexical_search_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *EmDocument) GetDocumentId() string {
+func (x *LSearchRequest) GetQuery() string {
 	if x != nil {
-		return x.DocumentId
+		return x.Query
 	}
 	return ""
 }
 
-func (x *EmDocument) GetUrl() string {
+func (x *LSearchRequest) GetTopK() uint32 {
 	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
-func (x *EmDocument) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *EmDocument) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-func (x *EmDocument) GetVersion() uint64 {
-	if x != nil {
-		return x.Version
+		return x.TopK
 	}
 	return 0
 }
 
-type EmbeddingBatchResult struct {
+type LSearchResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Results       []*EmbeddingResult     `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
+	Results       []*commonv1.SearchHit  `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EmbeddingBatchResult) Reset() {
-	*x = EmbeddingBatchResult{}
+func (x *LSearchResponse) Reset() {
+	*x = LSearchResponse{}
 	mi := &file_v1_lexical_search_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EmbeddingBatchResult) String() string {
+func (x *LSearchResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EmbeddingBatchResult) ProtoMessage() {}
+func (*LSearchResponse) ProtoMessage() {}
 
-func (x *EmbeddingBatchResult) ProtoReflect() protoreflect.Message {
+func (x *LSearchResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_lexical_search_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -129,100 +106,30 @@ func (x *EmbeddingBatchResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EmbeddingBatchResult.ProtoReflect.Descriptor instead.
-func (*EmbeddingBatchResult) Descriptor() ([]byte, []int) {
+// Deprecated: Use LSearchResponse.ProtoReflect.Descriptor instead.
+func (*LSearchResponse) Descriptor() ([]byte, []int) {
 	return file_v1_lexical_search_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *EmbeddingBatchResult) GetResults() []*EmbeddingResult {
+func (x *LSearchResponse) GetResults() []*commonv1.SearchHit {
 	if x != nil {
 		return x.Results
 	}
 	return nil
 }
 
-type EmbeddingResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	DocumentId    string                 `protobuf:"bytes,1,opt,name=document_id,json=documentId,proto3" json:"document_id,omitempty"`
-	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	Error         string                 `protobuf:"bytes,3,opt,name=error,proto3" json:"error,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EmbeddingResult) Reset() {
-	*x = EmbeddingResult{}
-	mi := &file_v1_lexical_search_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EmbeddingResult) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EmbeddingResult) ProtoMessage() {}
-
-func (x *EmbeddingResult) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_lexical_search_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use EmbeddingResult.ProtoReflect.Descriptor instead.
-func (*EmbeddingResult) Descriptor() ([]byte, []int) {
-	return file_v1_lexical_search_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *EmbeddingResult) GetDocumentId() string {
-	if x != nil {
-		return x.DocumentId
-	}
-	return ""
-}
-
-func (x *EmbeddingResult) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *EmbeddingResult) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
-}
-
 var File_v1_lexical_search_proto protoreflect.FileDescriptor
 
 const file_v1_lexical_search_proto_rawDesc = "" +
 	"\n" +
-	"\x17v1/lexical_search.proto\x12\tsearch.v1\"\x89\x01\n" +
-	"\n" +
-	"EmDocument\x12\x1f\n" +
-	"\vdocument_id\x18\x01 \x01(\tR\n" +
-	"documentId\x12\x10\n" +
-	"\x03url\x18\x02 \x01(\tR\x03url\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12\x18\n" +
-	"\acontent\x18\x04 \x01(\tR\acontent\x12\x18\n" +
-	"\aversion\x18\x05 \x01(\x04R\aversion\"L\n" +
-	"\x14EmbeddingBatchResult\x124\n" +
-	"\aresults\x18\x01 \x03(\v2\x1a.search.v1.EmbeddingResultR\aresults\"b\n" +
-	"\x0fEmbeddingResult\x12\x1f\n" +
-	"\vdocument_id\x18\x01 \x01(\tR\n" +
-	"documentId\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x14\n" +
-	"\x05error\x18\x03 \x01(\tR\x05error2b\n" +
-	"\x10EmbeddingService\x12N\n" +
-	"\x12GenerateEmbeddings\x12\x15.search.v1.EmDocument\x1a\x1f.search.v1.EmbeddingBatchResult(\x01B\x1cZ\x1asearch/gen/lexicalsearchv1b\x06proto3"
+	"\x17v1/lexical_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\";\n" +
+	"\x0eLSearchRequest\x12\x14\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n" +
+	"\x05top_k\x18\x02 \x01(\rR\x04topK\"A\n" +
+	"\x0fLSearchResponse\x12.\n" +
+	"\aresults\x18\x01 \x03(\v2\x14.search.v1.SearchHitR\aresults2W\n" +
+	"\x14LexicalSearchService\x12?\n" +
+	"\x06Search\x12\x19.search.v1.LSearchRequest\x1a\x1a.search.v1.LSearchResponseB\x1bZ\x19cruwl/gen/lexicalsearchv1b\x06proto3"
 
 var (
 	file_v1_lexical_search_proto_rawDescOnce sync.Once
@@ -236,16 +143,16 @@ func file_v1_lexical_search_proto_rawDescGZIP() []byte {
 	return file_v1_lexical_search_proto_rawDescData
 }
 
-var file_v1_lexical_search_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_v1_lexical_search_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_v1_lexical_search_proto_goTypes = []any{
-	(*EmDocument)(nil),           // 0: search.v1.EmDocument
-	(*EmbeddingBatchResult)(nil), // 1: search.v1.EmbeddingBatchResult
-	(*EmbeddingResult)(nil),      // 2: search.v1.EmbeddingResult
+	(*LSearchRequest)(nil),     // 0: search.v1.LSearchRequest
+	(*LSearchResponse)(nil),    // 1: search.v1.LSearchResponse
+	(*commonv1.SearchHit)(nil), // 2: search.v1.SearchHit
 }
 var file_v1_lexical_search_proto_depIdxs = []int32{
-	2, // 0: search.v1.EmbeddingBatchResult.results:type_name -> search.v1.EmbeddingResult
-	0, // 1: search.v1.EmbeddingService.GenerateEmbeddings:input_type -> search.v1.EmDocument
-	1, // 2: search.v1.EmbeddingService.GenerateEmbeddings:output_type -> search.v1.EmbeddingBatchResult
+	2, // 0: search.v1.LSearchResponse.results:type_name -> search.v1.SearchHit
+	0, // 1: search.v1.LexicalSearchService.Search:input_type -> search.v1.LSearchRequest
+	1, // 2: search.v1.LexicalSearchService.Search:output_type -> search.v1.LSearchResponse
 	2, // [2:3] is the sub-list for method output_type
 	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -264,7 +171,7 @@ func file_v1_lexical_search_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_lexical_search_proto_rawDesc), len(file_v1_lexical_search_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

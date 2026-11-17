@@ -5,7 +5,6 @@ import type { CrawledDocument } from "@search/core";
 import type { BlobStore } from "./blob-store.ts";
 import { invalid } from "../errors.ts";
 
-export const DEFAULT_KEY_PREFIX = "documents/";
 export const DOCUMENT_SCHEMA_VERSION = 1;
 
 export interface BlobDocumentStoreOptions {
@@ -61,7 +60,7 @@ const gunzipAsync = (data: Uint8Array, maxOutputLength: number): Promise<Buffer>
 /** A stable key per URL, so each successful crawl replaces that URL's current snapshot. */
 export function documentKey(
     url: string,
-    keyPrefix = DEFAULT_KEY_PREFIX,
+    keyPrefix = "",
 ): string {
     return `${keyPrefix}${hashUrl(url)}.json.gz`;
 }
@@ -69,7 +68,7 @@ export function documentKey(
 /** Parses current and legacy keys; undefined for malformed keys from untrusted events. */
 export function parseDocumentKey(
     key: string,
-    keyPrefix = DEFAULT_KEY_PREFIX,
+    keyPrefix = "",
 ): ParsedDocumentKey | undefined {
     if (!key.startsWith(keyPrefix)) return undefined;
     const relativeKey = key.slice(keyPrefix.length);

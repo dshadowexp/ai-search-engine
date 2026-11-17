@@ -7,6 +7,7 @@ from collections import abc as _abc
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf.internal import containers as _containers
+from v1 import common_pb2 as _common_pb2
 import builtins as _builtins
 import sys
 import typing as _typing
@@ -19,47 +20,38 @@ else:
 DESCRIPTOR: _descriptor.FileDescriptor
 
 @_typing.final
-class EmDocument(_message.Message):
+class LSearchRequest(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    DOCUMENT_ID_FIELD_NUMBER: _builtins.int
-    URL_FIELD_NUMBER: _builtins.int
-    TITLE_FIELD_NUMBER: _builtins.int
-    CONTENT_FIELD_NUMBER: _builtins.int
-    VERSION_FIELD_NUMBER: _builtins.int
-    document_id: _builtins.str
-    url: _builtins.str
-    title: _builtins.str
-    content: _builtins.str
-    version: _builtins.int
+    QUERY_FIELD_NUMBER: _builtins.int
+    TOP_K_FIELD_NUMBER: _builtins.int
+    query: _builtins.str
+    top_k: _builtins.int
     def __init__(
         self,
         *,
-        document_id: _builtins.str = ...,
-        url: _builtins.str = ...,
-        title: _builtins.str = ...,
-        content: _builtins.str = ...,
-        version: _builtins.int = ...,
+        query: _builtins.str = ...,
+        top_k: _builtins.int = ...,
     ) -> None: ...
     _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["content", b"content", "document_id", b"document_id", "title", b"title", "url", b"url", "version", b"version"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["query", b"query", "top_k", b"top_k"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___EmDocument: _TypeAlias = EmDocument  # noqa: Y015
+Global___LSearchRequest: _TypeAlias = LSearchRequest  # noqa: Y015
 
 @_typing.final
-class EmbeddingBatchResult(_message.Message):
+class LSearchResponse(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
     RESULTS_FIELD_NUMBER: _builtins.int
     @_builtins.property
-    def results(self) -> _containers.RepeatedCompositeFieldContainer[Global___EmbeddingResult]: ...
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_common_pb2.SearchHit]: ...
     def __init__(
         self,
         *,
-        results: _abc.Iterable[Global___EmbeddingResult] | None = ...,
+        results: _abc.Iterable[_common_pb2.SearchHit] | None = ...,
     ) -> None: ...
     _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
@@ -67,29 +59,4 @@ class EmbeddingBatchResult(_message.Message):
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___EmbeddingBatchResult: _TypeAlias = EmbeddingBatchResult  # noqa: Y015
-
-@_typing.final
-class EmbeddingResult(_message.Message):
-    DESCRIPTOR: _descriptor.Descriptor
-
-    DOCUMENT_ID_FIELD_NUMBER: _builtins.int
-    SUCCESS_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
-    document_id: _builtins.str
-    success: _builtins.bool
-    error: _builtins.str
-    def __init__(
-        self,
-        *,
-        document_id: _builtins.str = ...,
-        success: _builtins.bool = ...,
-        error: _builtins.str = ...,
-    ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
-    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["document_id", b"document_id", "error", b"error", "success", b"success"]  # noqa: Y015
-    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-    def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-Global___EmbeddingResult: _TypeAlias = EmbeddingResult  # noqa: Y015
+Global___LSearchResponse: _TypeAlias = LSearchResponse  # noqa: Y015

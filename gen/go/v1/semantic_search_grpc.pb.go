@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	commonv1 "search/gen/commonv1"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SemanticSearchService_Search_FullMethodName       = "/search.v1.SemanticSearchService/Search"
-	SemanticSearchService_Rerank_FullMethodName       = "/search.v1.SemanticSearchService/Rerank"
-	SemanticSearchService_SearchStream_FullMethodName = "/search.v1.SemanticSearchService/SearchStream"
+	SemanticSearchService_Search_FullMethodName        = "/search.v1.SemanticSearchService/Search"
+	SemanticSearchService_Rerank_FullMethodName        = "/search.v1.SemanticSearchService/Rerank"
+	SemanticSearchService_SummaryStream_FullMethodName = "/search.v1.SemanticSearchService/SummaryStream"
 )
 
 // SemanticSearchServiceClient is the client API for SemanticSearchService service.
@@ -30,11 +29,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SemanticSearchServiceClient interface {
 	// Embeds the query, retrieves candidates, and returns ranked results.
-	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
+	Search(ctx context.Context, in *SSearchRequest, opts ...grpc.CallOption) (*SSearchResponse, error)
 	// Reranks an existing candidate set for a query.
 	Rerank(ctx context.Context, in *RerankRequest, opts ...grpc.CallOption) (*RerankResponse, error)
 	// Streams ranked results as they are produced by the retrieval pipeline.
-	SearchStream(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[commonv1.SearchHit], error)
+	SummaryStream(ctx context.Context, in *SummaryStreamRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SummaryStreamResponse], error)
 }
 
 type semanticSearchServiceClient struct {
@@ -45,9 +44,9 @@ func NewSemanticSearchServiceClient(cc grpc.ClientConnInterface) SemanticSearchS
 	return &semanticSearchServiceClient{cc}
 }
 
-func (c *semanticSearchServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
+func (c *semanticSearchServiceClient) Search(ctx context.Context, in *SSearchRequest, opts ...grpc.CallOption) (*SSearchResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchResponse)
+	out := new(SSearchResponse)
 	err := c.cc.Invoke(ctx, SemanticSearchService_Search_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -65,13 +64,13 @@ func (c *semanticSearchServiceClient) Rerank(ctx context.Context, in *RerankRequ
 	return out, nil
 }
 
-func (c *semanticSearchServiceClient) SearchStream(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[commonv1.SearchHit], error) {
+func (c *semanticSearchServiceClient) SummaryStream(ctx context.Context, in *SummaryStreamRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SummaryStreamResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &SemanticSearchService_ServiceDesc.Streams[0], SemanticSearchService_SearchStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &SemanticSearchService_ServiceDesc.Streams[0], SemanticSearchService_SummaryStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[SearchRequest, commonv1.SearchHit]{ClientStream: stream}
+	x := &grpc.GenericClientStream[SummaryStreamRequest, SummaryStreamResponse]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -82,18 +81,18 @@ func (c *semanticSearchServiceClient) SearchStream(ctx context.Context, in *Sear
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type SemanticSearchService_SearchStreamClient = grpc.ServerStreamingClient[commonv1.SearchHit]
+type SemanticSearchService_SummaryStreamClient = grpc.ServerStreamingClient[SummaryStreamResponse]
 
 // SemanticSearchServiceServer is the server API for SemanticSearchService service.
 // All implementations must embed UnimplementedSemanticSearchServiceServer
 // for forward compatibility.
 type SemanticSearchServiceServer interface {
 	// Embeds the query, retrieves candidates, and returns ranked results.
-	Search(context.Context, *SearchRequest) (*SearchResponse, error)
+	Search(context.Context, *SSearchRequest) (*SSearchResponse, error)
 	// Reranks an existing candidate set for a query.
 	Rerank(context.Context, *RerankRequest) (*RerankResponse, error)
 	// Streams ranked results as they are produced by the retrieval pipeline.
-	SearchStream(*SearchRequest, grpc.ServerStreamingServer[commonv1.SearchHit]) error
+	SummaryStream(*SummaryStreamRequest, grpc.ServerStreamingServer[SummaryStreamResponse]) error
 	mustEmbedUnimplementedSemanticSearchServiceServer()
 }
 
@@ -104,14 +103,14 @@ type SemanticSearchServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSemanticSearchServiceServer struct{}
 
-func (UnimplementedSemanticSearchServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
+func (UnimplementedSemanticSearchServiceServer) Search(context.Context, *SSearchRequest) (*SSearchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Search not implemented")
 }
 func (UnimplementedSemanticSearchServiceServer) Rerank(context.Context, *RerankRequest) (*RerankResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Rerank not implemented")
 }
-func (UnimplementedSemanticSearchServiceServer) SearchStream(*SearchRequest, grpc.ServerStreamingServer[commonv1.SearchHit]) error {
-	return status.Error(codes.Unimplemented, "method SearchStream not implemented")
+func (UnimplementedSemanticSearchServiceServer) SummaryStream(*SummaryStreamRequest, grpc.ServerStreamingServer[SummaryStreamResponse]) error {
+	return status.Error(codes.Unimplemented, "method SummaryStream not implemented")
 }
 func (UnimplementedSemanticSearchServiceServer) mustEmbedUnimplementedSemanticSearchServiceServer() {}
 func (UnimplementedSemanticSearchServiceServer) testEmbeddedByValue()                               {}
@@ -135,7 +134,7 @@ func RegisterSemanticSearchServiceServer(s grpc.ServiceRegistrar, srv SemanticSe
 }
 
 func _SemanticSearchService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchRequest)
+	in := new(SSearchRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +146,7 @@ func _SemanticSearchService_Search_Handler(srv interface{}, ctx context.Context,
 		FullMethod: SemanticSearchService_Search_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SemanticSearchServiceServer).Search(ctx, req.(*SearchRequest))
+		return srv.(SemanticSearchServiceServer).Search(ctx, req.(*SSearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -170,16 +169,16 @@ func _SemanticSearchService_Rerank_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SemanticSearchService_SearchStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(SearchRequest)
+func _SemanticSearchService_SummaryStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SummaryStreamRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(SemanticSearchServiceServer).SearchStream(m, &grpc.GenericServerStream[SearchRequest, commonv1.SearchHit]{ServerStream: stream})
+	return srv.(SemanticSearchServiceServer).SummaryStream(m, &grpc.GenericServerStream[SummaryStreamRequest, SummaryStreamResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type SemanticSearchService_SearchStreamServer = grpc.ServerStreamingServer[commonv1.SearchHit]
+type SemanticSearchService_SummaryStreamServer = grpc.ServerStreamingServer[SummaryStreamResponse]
 
 // SemanticSearchService_ServiceDesc is the grpc.ServiceDesc for SemanticSearchService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -199,8 +198,8 @@ var SemanticSearchService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SearchStream",
-			Handler:       _SemanticSearchService_SearchStream_Handler,
+			StreamName:    "SummaryStream",
+			Handler:       _SemanticSearchService_SummaryStream_Handler,
 			ServerStreams: true,
 		},
 	},
