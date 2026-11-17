@@ -3,12 +3,20 @@ import type { DocumentRepository } from "./storage/document-repository.ts";
 import type { IndexJobStore } from "./storage/job-store.ts";
 import type { LexicalRepository } from "./storage/lexical-repository.ts";
 import { INDEX_STAGES, type IndexJob, type IndexingStats, type StageLease } from "./types.ts";
+import {
+    createIndexedDocumentMessage,
+    type IndexedDocumentMessage,
+} from "@search/core";
+import type { MessageQueueProducer } from "@search/infra";
+import type { IndexedBlobDocumentStore } from "./storage/blob-document-store.ts";
 
 export interface IndexerDependencies {
     documents: DocumentRepository;
     jobs: IndexJobStore;
     lexical: LexicalRepository;
     lexicalIndexer: LexicalIndexer;
+    indexedDocuments?: Pick<IndexedBlobDocumentStore, "saveVersion">;
+    semanticQueue?: MessageQueueProducer<IndexedDocumentMessage>;
 }
 
 /**
@@ -60,6 +68,18 @@ export class Indexer {
             }
             await this.deps.lexical.activate(job.documentId, job.version);
             await this.retireBefore(job.documentId, job.version);
+        }
+
+        if (this.deps.indexedDocuments && this.deps.semanticQueue) {
+            const current = await this.deps.documents.get(job.documentId);
+            if (current?.activeVersion === job.version) {
+                const document = await this.deps.documents.getVersion(job.documentId, job.version);
+                if (!document) {
+                    throw new Error(`active indexed document ${job.documentId}@${job.version} is missing`);
+                }
+                const reference = await this.deps.indexedDocuments.saveVersion(document);
+                await this.deps.semanticQueue.publish(createIndexedDocumentMessage(reference));
+            }
         }
 
         await this.deps.jobs.markPublished(job.documentId, job.version, INDEX_STAGES);

@@ -10,17 +10,17 @@ import {
     type SavedDocument
 } from "@search/infra";
 
-export interface CrawlerBlobDocumentStoreOptions extends BlobDocumentStoreOptions {
+export interface CrawledBlobDocumentStoreOptions extends BlobDocumentStoreOptions {
     blobs: Pick<BlobStore, "put" | "get" | "list" | "delete" | "close">;
 }
 
 /** Crawler-facing persistence operations. */
-export class CrawlerBlobDocumentStore implements DocumentStore<CrawledDocument, SavedDocument> {
+export class CrawledBlobDocumentStore implements DocumentStore<CrawledDocument, SavedDocument> {
     private readonly blobs: Pick<BlobStore, "put" | "get" | "list" | "delete" | "close">;
     private readonly keyPrefix: string;
     private readonly maxDocumentBytes: number;
 
-    constructor(options: CrawlerBlobDocumentStoreOptions) {
+    constructor(options: CrawledBlobDocumentStoreOptions) {
         this.blobs = options.blobs;
         this.keyPrefix = options.keyPrefix ?? "";
         this.maxDocumentBytes = options.maxDocumentBytes ?? 5 * 1024 * 1024;
@@ -32,7 +32,7 @@ export class CrawlerBlobDocumentStore implements DocumentStore<CrawledDocument, 
     }
 
     async saveVersion(document: CrawledDocument, options: { signal?: AbortSignal } = {}): Promise<SavedDocument> {
-        return saveDocumentVersion(this.blobs, document, this.keyPrefix, this.maxDocumentBytes, options);
+        return saveDocumentVersion<CrawledDocument>(this.blobs, document, this.keyPrefix, this.maxDocumentBytes, options);
     }
 
     async get(url: string): Promise<CrawledDocument | undefined> {

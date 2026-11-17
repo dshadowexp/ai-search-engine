@@ -7,15 +7,15 @@ import {
 import { createCrawler } from "./setup.ts";
 import { envSchema } from "./config/env-schema.ts";
 import { type CrawledDocumentMessage, crawledDocumentMessageSchema } from "@search/core";
-import { CrawlerBlobDocumentStore } from "./storage/blob-document-store.ts";
+import { CrawledBlobDocumentStore } from "./storage/blob-document-store.ts";
 
 async function startCrawler() {
     const config = loadConfig(envSchema);
 
     LogStream.getInstance().addStream(process.stdout);
 
-    const documentStore = new CrawlerBlobDocumentStore({
-        keyPrefix: "crawleddocuments",
+    const documentStore = new CrawledBlobDocumentStore({
+        keyPrefix: "crawled-documents/",
         blobs: new S3BlobStore({
             bucket: config.s3Bucket,
             region: config.s3Region,

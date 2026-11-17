@@ -1,7 +1,13 @@
-import { type CrawledDocumentMessage, crawledDocumentMessageSchema, loadConfig } from "@search/core";
+import {
+    type CrawledDocumentMessage,
+    type IndexedDocumentMessage,
+    crawledDocumentMessageSchema,
+    indexedDocumentMessageSchema,
+    loadConfig,
+} from "@search/core";
 import { envSchema } from "./config/env-schema.ts";
 import { LogStream, S3BlobStore, SqsMessageQueue } from "@search/infra";
-import { IndexerBlobDocumentStore } from "./storage/blob-document-store.ts";
+import { CrawledBlobDocumentStore, IndexedBlobDocumentStore } from "./storage/blob-document-store.ts";
 import { GrpcServer } from "./grpc/server.ts";
 import {
     lexicalSearchServiceDefinition,
@@ -14,8 +20,18 @@ const config = loadConfig(envSchema);
 async function consumeCrawledDocumentMessages() {
     LogStream.getInstance().addStream(process.stdout);
 
-    const documentStore = new IndexerBlobDocumentStore({
-        keyPrefix: "crawleddocuments",
+    const crawledDocumentStore = new CrawledBlobDocumentStore({
+        keyPrefix: "crawled-documents/",
+        blobs: new S3BlobStore({
+            bucket: config.s3Bucket,
+            region: config.s3Region,
+            ...(config.s3Endpoint ? { endpoint: config.s3Endpoint } : { }),
+            ownsClient: true,
+        }),
+    });
+
+    const indexedDocumentStore = new IndexedBlobDocumentStore({
+        keyPrefix: "indexed-documents/",
         blobs: new S3BlobStore({
             bucket: config.s3Bucket,
             region: config.s3Region,
@@ -33,18 +49,23 @@ async function consumeCrawledDocumentMessages() {
             : {}),
     });
 
-    const semanticQueue = new SqsMessageQueue<CrawledDocumentMessage>(config.semanticSqsQueueUrl, {
-        schema: crawledDocumentMessageSchema,
+    const semanticQueue = new SqsMessageQueue<IndexedDocumentMessage>(config.semanticSqsQueueUrl, {
+        schema: indexedDocumentMessageSchema,
         region: config.awsRegion,
         ...(config.sqsEndpoint ? { endpoint: config.sqsEndpoint } : { }),
         ...(new URL(config.semanticSqsQueueUrl).pathname.endsWith(".fifo")
-            ? { messageGroupId: (message) => message.document.documentId }
+            ? {
+                messageGroupId: (message) => message.document.documentId,
+                deduplicationId: (message) => message.eventId,
+            }
             : {}),
     });
 
     const { pipeline, documentConsumer, searchService } = createIndexingPipeline({
-        blobDocuments: documentStore,
+        blobDocuments: crawledDocumentStore,
         documentQueue: indexQueue,
+        indexedDocuments: indexedDocumentStore,
+        semanticQueue,
     });
     if (!documentConsumer) throw new Error("Indexer document consumer was not created");
 
@@ -59,8 +80,9 @@ async function consumeCrawledDocumentMessages() {
                 await Promise.all([queueConsumer.stop(), pipeline.stop()]);
             } finally {
                 await Promise.all([
-                    documentStore.close(), 
-                    indexQueue.close(), 
+                    crawledDocumentStore.close(),
+                    indexedDocumentStore.close(),
+                    indexQueue.close(),
                     semanticQueue.close()
                 ]);
             }

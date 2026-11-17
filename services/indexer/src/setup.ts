@@ -10,8 +10,16 @@ import { InMemoryDocumentRepository, type DocumentRepository } from "./storage/d
 import { InMemoryIndexJobStore, type IndexJobStore } from "./storage/job-store.ts";
 import { InMemoryLexicalRepository, type LexicalRepository } from "./storage/lexical-repository.ts";
 import type { IndexingStats, IngestStats } from "./types.ts";
-import type { IndexerBlobDocuments, MessageQueueConsumer } from "@search/infra";
-import type { CrawledDocumentMessage } from "@search/core";
+import type {
+    CrawledDocumentMessage,
+    IndexedDocumentMessage,
+} from "@search/core";
+import type {
+    IndexerBlobDocuments,
+    MessageQueueConsumer,
+    MessageQueueProducer,
+} from "@search/infra";
+import type { IndexedBlobDocumentStore } from "./storage/blob-document-store.ts";
 
 export interface CreateIndexingPipelineOptions extends IndexingConfig {
     analyzer?: Analyzer;
@@ -21,6 +29,9 @@ export interface CreateIndexingPipelineOptions extends IndexingConfig {
     /** Provide these together to load persisted crawl events into the indexer. */
     blobDocuments?: IndexerBlobDocuments;
     documentQueue?: MessageQueueConsumer<CrawledDocumentMessage>;
+    /** Provide these together to persist and publish documents for semantic indexing. */
+    indexedDocuments?: Pick<IndexedBlobDocumentStore, "saveVersion">;
+    semanticQueue?: MessageQueueProducer<IndexedDocumentMessage>;
 }
 
 /** Wires document ingestion and lexical indexing around shared stores and one clock. */
@@ -29,11 +40,16 @@ export function createIndexingPipeline(options: CreateIndexingPipelineOptions = 
         analyzer = new StandardAnalyzer(),
         blobDocuments,
         documentQueue,
+        indexedDocuments,
+        semanticQueue,
         ...configOptions
     } = options;
     const config = resolveIndexingConfig(configOptions);
     if (Boolean(blobDocuments) !== Boolean(documentQueue)) {
         throw new Error("blobDocuments and documentQueue must be provided together");
+    }
+    if (Boolean(indexedDocuments) !== Boolean(semanticQueue)) {
+        throw new Error("indexedDocuments and semanticQueue must be provided together");
     }
 
     const documents = options.documents ?? new InMemoryDocumentRepository();
@@ -62,6 +78,7 @@ export function createIndexingPipeline(options: CreateIndexingPipelineOptions = 
             jobs,
             lexical,
             lexicalIndexer: new LexicalIndexer(analyzer, lexical),
+            ...(indexedDocuments && semanticQueue ? { indexedDocuments, semanticQueue } : {}),
         },
         config,
         stats,

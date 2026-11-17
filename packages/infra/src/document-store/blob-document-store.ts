@@ -81,9 +81,9 @@ export function parseDocumentKey(
         : undefined;
 }
 
-export async function saveDocumentVersion(
+export async function saveDocumentVersion<T>(
     blobs: Pick<BlobStore, "put" | "list" | "delete">,
-    document: CrawledDocument,
+    document: T,
     keyPrefix: string,
     maxDocumentBytes: number,
     options: { signal?: AbortSignal } = {},
@@ -156,7 +156,7 @@ export async function listDocumentVersions(
             if (!parsedKey) continue;
 
             const fetchedAt = parsedKey.fetchedAt ??
-                (await loadDocument(blobs, item.key, keyPrefix, maxDocumentBytes)).fetchedAt;
+                (await loadDocument<{ fetchedAt: number }>(blobs, item.key, keyPrefix, maxDocumentBytes)).fetchedAt;
             refs.push({ key: item.key, documentId: parsedKey.documentId, fetchedAt });
         }
         token = page.nextToken;
@@ -164,12 +164,12 @@ export async function listDocumentVersions(
     return refs.sort((left, right) => left.fetchedAt - right.fetchedAt || left.key.localeCompare(right.key));
 }
 
-export async function loadDocument(
+export async function loadDocument<T>(
     blobs: Pick<BlobStore, "get">,
     ref: DocumentRef | string,
     keyPrefix: string,
     maxDocumentBytes: number,
-): Promise<CrawledDocument> {
+): Promise<T> {
     const key = typeof ref === "string" ? ref : ref.key;
     const parsedKey = parseDocumentKey(key, keyPrefix);
     if (!parsedKey) {
@@ -203,5 +203,6 @@ export async function loadDocument(
         (parsedKey.fetchedAt !== undefined && document.fetchedAt !== parsedKey.fetchedAt)) {
         throw invalid(`document ${key} does not belong at this key (URL/fetchedAt mismatch)`);
     }
-    return document;
+
+    return document as T;
 }
