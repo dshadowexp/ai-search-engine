@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package search.v1;
+
+option go_package = "cruwl/gen/querysummaryv1";
+
+service SummarySearchService {
+    // Streams ranked results as they are produced by the retrieval pipeline.
+    rpc SummaryStream(SummaryStreamRequest) returns (stream SummaryStreamResponse);
+}
+
+message SummaryStreamRequest {
+    string query = 1;
+}
+
+message SummaryStreamResponse {
+    string summary = 1;
+}

@@ -1,7 +1,10 @@
 [project]
-name = "shared"
+name = "proto-gen"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
+dependencies = [
+    "protobuf>=7.36.2",
+]
 
 [build-system]
 requires = ["hatchling"]

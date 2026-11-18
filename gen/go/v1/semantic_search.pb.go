@@ -126,198 +126,6 @@ func (x *SSearchResponse) GetResults() []*commonv1.SearchHit {
 	return nil
 }
 
-type RerankRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	Candidates    []*commonv1.SearchHit  `protobuf:"bytes,2,rep,name=candidates,proto3" json:"candidates,omitempty"`
-	TopK          uint32                 `protobuf:"varint,3,opt,name=top_k,json=topK,proto3" json:"top_k,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RerankRequest) Reset() {
-	*x = RerankRequest{}
-	mi := &file_v1_semantic_search_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RerankRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RerankRequest) ProtoMessage() {}
-
-func (x *RerankRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_semantic_search_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RerankRequest.ProtoReflect.Descriptor instead.
-func (*RerankRequest) Descriptor() ([]byte, []int) {
-	return file_v1_semantic_search_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *RerankRequest) GetQuery() string {
-	if x != nil {
-		return x.Query
-	}
-	return ""
-}
-
-func (x *RerankRequest) GetCandidates() []*commonv1.SearchHit {
-	if x != nil {
-		return x.Candidates
-	}
-	return nil
-}
-
-func (x *RerankRequest) GetTopK() uint32 {
-	if x != nil {
-		return x.TopK
-	}
-	return 0
-}
-
-type RerankResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Results       []*commonv1.SearchHit  `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RerankResponse) Reset() {
-	*x = RerankResponse{}
-	mi := &file_v1_semantic_search_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RerankResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RerankResponse) ProtoMessage() {}
-
-func (x *RerankResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_semantic_search_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RerankResponse.ProtoReflect.Descriptor instead.
-func (*RerankResponse) Descriptor() ([]byte, []int) {
-	return file_v1_semantic_search_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *RerankResponse) GetResults() []*commonv1.SearchHit {
-	if x != nil {
-		return x.Results
-	}
-	return nil
-}
-
-type SummaryStreamRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SummaryStreamRequest) Reset() {
-	*x = SummaryStreamRequest{}
-	mi := &file_v1_semantic_search_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SummaryStreamRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SummaryStreamRequest) ProtoMessage() {}
-
-func (x *SummaryStreamRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_semantic_search_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SummaryStreamRequest.ProtoReflect.Descriptor instead.
-func (*SummaryStreamRequest) Descriptor() ([]byte, []int) {
-	return file_v1_semantic_search_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *SummaryStreamRequest) GetQuery() string {
-	if x != nil {
-		return x.Query
-	}
-	return ""
-}
-
-type SummaryStreamResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Summary       string                 `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SummaryStreamResponse) Reset() {
-	*x = SummaryStreamResponse{}
-	mi := &file_v1_semantic_search_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SummaryStreamResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SummaryStreamResponse) ProtoMessage() {}
-
-func (x *SummaryStreamResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_semantic_search_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SummaryStreamResponse.ProtoReflect.Descriptor instead.
-func (*SummaryStreamResponse) Descriptor() ([]byte, []int) {
-	return file_v1_semantic_search_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *SummaryStreamResponse) GetSummary() string {
-	if x != nil {
-		return x.Summary
-	}
-	return ""
-}
-
 var File_v1_semantic_search_proto protoreflect.FileDescriptor
 
 const file_v1_semantic_search_proto_rawDesc = "" +
@@ -331,23 +139,9 @@ const file_v1_semantic_search_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"A\n" +
 	"\x0fSSearchResponse\x12.\n" +
-	"\aresults\x18\x01 \x03(\v2\x14.search.v1.SearchHitR\aresults\"p\n" +
-	"\rRerankRequest\x12\x14\n" +
-	"\x05query\x18\x01 \x01(\tR\x05query\x124\n" +
-	"\n" +
-	"candidates\x18\x02 \x03(\v2\x14.search.v1.SearchHitR\n" +
-	"candidates\x12\x13\n" +
-	"\x05top_k\x18\x03 \x01(\rR\x04topK\"@\n" +
-	"\x0eRerankResponse\x12.\n" +
-	"\aresults\x18\x01 \x03(\v2\x14.search.v1.SearchHitR\aresults\",\n" +
-	"\x14SummaryStreamRequest\x12\x14\n" +
-	"\x05query\x18\x01 \x01(\tR\x05query\"1\n" +
-	"\x15SummaryStreamResponse\x12\x18\n" +
-	"\asummary\x18\x01 \x01(\tR\asummary2\xed\x01\n" +
+	"\aresults\x18\x01 \x03(\v2\x14.search.v1.SearchHitR\aresults2X\n" +
 	"\x15SemanticSearchService\x12?\n" +
-	"\x06Search\x12\x19.search.v1.SSearchRequest\x1a\x1a.search.v1.SSearchResponse\x12=\n" +
-	"\x06Rerank\x12\x18.search.v1.RerankRequest\x1a\x19.search.v1.RerankResponse\x12T\n" +
-	"\rSummaryStream\x12\x1f.search.v1.SummaryStreamRequest\x1a .search.v1.SummaryStreamResponse0\x01B\x1cZ\x1acruwl/gen/semanticsearchv1b\x06proto3"
+	"\x06Search\x12\x19.search.v1.SSearchRequest\x1a\x1a.search.v1.SSearchResponseB\x1cZ\x1acruwl/gen/semanticsearchv1b\x06proto3"
 
 var (
 	file_v1_semantic_search_proto_rawDescOnce sync.Once
@@ -361,33 +155,23 @@ func file_v1_semantic_search_proto_rawDescGZIP() []byte {
 	return file_v1_semantic_search_proto_rawDescData
 }
 
-var file_v1_semantic_search_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_v1_semantic_search_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_v1_semantic_search_proto_goTypes = []any{
-	(*SSearchRequest)(nil),        // 0: search.v1.SSearchRequest
-	(*SSearchResponse)(nil),       // 1: search.v1.SSearchResponse
-	(*RerankRequest)(nil),         // 2: search.v1.RerankRequest
-	(*RerankResponse)(nil),        // 3: search.v1.RerankResponse
-	(*SummaryStreamRequest)(nil),  // 4: search.v1.SummaryStreamRequest
-	(*SummaryStreamResponse)(nil), // 5: search.v1.SummaryStreamResponse
-	nil,                           // 6: search.v1.SSearchRequest.FiltersEntry
-	(*commonv1.SearchHit)(nil),    // 7: search.v1.SearchHit
+	(*SSearchRequest)(nil),     // 0: search.v1.SSearchRequest
+	(*SSearchResponse)(nil),    // 1: search.v1.SSearchResponse
+	nil,                        // 2: search.v1.SSearchRequest.FiltersEntry
+	(*commonv1.SearchHit)(nil), // 3: search.v1.SearchHit
 }
 var file_v1_semantic_search_proto_depIdxs = []int32{
-	6, // 0: search.v1.SSearchRequest.filters:type_name -> search.v1.SSearchRequest.FiltersEntry
-	7, // 1: search.v1.SSearchResponse.results:type_name -> search.v1.SearchHit
-	7, // 2: search.v1.RerankRequest.candidates:type_name -> search.v1.SearchHit
-	7, // 3: search.v1.RerankResponse.results:type_name -> search.v1.SearchHit
-	0, // 4: search.v1.SemanticSearchService.Search:input_type -> search.v1.SSearchRequest
-	2, // 5: search.v1.SemanticSearchService.Rerank:input_type -> search.v1.RerankRequest
-	4, // 6: search.v1.SemanticSearchService.SummaryStream:input_type -> search.v1.SummaryStreamRequest
-	1, // 7: search.v1.SemanticSearchService.Search:output_type -> search.v1.SSearchResponse
-	3, // 8: search.v1.SemanticSearchService.Rerank:output_type -> search.v1.RerankResponse
-	5, // 9: search.v1.SemanticSearchService.SummaryStream:output_type -> search.v1.SummaryStreamResponse
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	2, // 0: search.v1.SSearchRequest.filters:type_name -> search.v1.SSearchRequest.FiltersEntry
+	3, // 1: search.v1.SSearchResponse.results:type_name -> search.v1.SearchHit
+	0, // 2: search.v1.SemanticSearchService.Search:input_type -> search.v1.SSearchRequest
+	1, // 3: search.v1.SemanticSearchService.Search:output_type -> search.v1.SSearchResponse
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_v1_semantic_search_proto_init() }
@@ -401,7 +185,7 @@ func file_v1_semantic_search_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_semantic_search_proto_rawDesc), len(file_v1_semantic_search_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

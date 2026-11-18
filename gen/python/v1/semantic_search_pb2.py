@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from v1 import common_pb2 as v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18v1/semantic_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\"\xb9\x01\n\x0eSSearchRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n\x05top_k\x18\x02 \x01(\rR\x04topK\x12@\n\x07\x66ilters\x18\x03 \x03(\x0b\x32&.search.v1.SSearchRequest.FiltersEntryR\x07\x66ilters\x1a:\n\x0c\x46iltersEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"A\n\x0fSSearchResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results\"p\n\rRerankRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x34\n\ncandidates\x18\x02 \x03(\x0b\x32\x14.search.v1.SearchHitR\ncandidates\x12\x13\n\x05top_k\x18\x03 \x01(\rR\x04topK\"@\n\x0eRerankResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results\",\n\x14SummaryStreamRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\"1\n\x15SummaryStreamResponse\x12\x18\n\x07summary\x18\x01 \x01(\tR\x07summary2\xed\x01\n\x15SemanticSearchService\x12?\n\x06Search\x12\x19.search.v1.SSearchRequest\x1a\x1a.search.v1.SSearchResponse\x12=\n\x06Rerank\x12\x18.search.v1.RerankRequest\x1a\x19.search.v1.RerankResponse\x12T\n\rSummaryStream\x12\x1f.search.v1.SummaryStreamRequest\x1a .search.v1.SummaryStreamResponse0\x01\x42\x1cZ\x1a\x63ruwl/gen/semanticsearchv1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18v1/semantic_search.proto\x12\tsearch.v1\x1a\x0fv1/common.proto\"\xb9\x01\n\x0eSSearchRequest\x12\x14\n\x05query\x18\x01 \x01(\tR\x05query\x12\x13\n\x05top_k\x18\x02 \x01(\rR\x04topK\x12@\n\x07\x66ilters\x18\x03 \x03(\x0b\x32&.search.v1.SSearchRequest.FiltersEntryR\x07\x66ilters\x1a:\n\x0c\x46iltersEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"A\n\x0fSSearchResponse\x12.\n\x07results\x18\x01 \x03(\x0b\x32\x14.search.v1.SearchHitR\x07results2X\n\x15SemanticSearchService\x12?\n\x06Search\x12\x19.search.v1.SSearchRequest\x1a\x1a.search.v1.SSearchResponseB\x1cZ\x1a\x63ruwl/gen/semanticsearchv1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,14 +41,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SSEARCHREQUEST_FILTERSENTRY']._serialized_end=242
   _globals['_SSEARCHRESPONSE']._serialized_start=244
   _globals['_SSEARCHRESPONSE']._serialized_end=309
-  _globals['_RERANKREQUEST']._serialized_start=311
-  _globals['_RERANKREQUEST']._serialized_end=423
-  _globals['_RERANKRESPONSE']._serialized_start=425
-  _globals['_RERANKRESPONSE']._serialized_end=489
-  _globals['_SUMMARYSTREAMREQUEST']._serialized_start=491
-  _globals['_SUMMARYSTREAMREQUEST']._serialized_end=535
-  _globals['_SUMMARYSTREAMRESPONSE']._serialized_start=537
-  _globals['_SUMMARYSTREAMRESPONSE']._serialized_end=586
-  _globals['_SEMANTICSEARCHSERVICE']._serialized_start=589
-  _globals['_SEMANTICSEARCHSERVICE']._serialized_end=826
+  _globals['_SEMANTICSEARCHSERVICE']._serialized_start=311
+  _globals['_SEMANTICSEARCHSERVICE']._serialized_end=399
 # @@protoc_insertion_point(module_scope)

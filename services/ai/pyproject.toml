@@ -1,38 +1,27 @@
 [project]
 name = "ai"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-  "shared",
-  "grpcio==1.85.1",
-  "sentence-transformers==6.3.0",
-  "pgvector==0.5.1",
-  "protobuf==7.36.2",
-  "psycopg2-binary==2.9.13",
-  "boto3==1.44.3"
+  "proto-gen",
+  "grpcio>=1.85.1",
+  "sentence-transformers>=6.3.0",
+  "qdrant-client>=1.20.0",
+  "boto3==1.44.3",
+  "asyncpg>=0.32.0",
+  "numpy>=2.5.4",
 ]
 
-[project.optional-dependencies]
-dev = [
-  "grpcio-tools>=1.62",            # .proto -> Python codegen
-  "pytest>=8.0",
-  "ruff>=0.5",
-  "pytest==9.2.0"
-]
+[tool.uv.sources]
+proto-gen = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ai_worker"]
+packages = ["src/ai"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
-[tool.ruff]
-line-length = 100
-target-version = "py311"
-
-[tool.uv.sources]
-shared = { workspace = true }
+asyncio_mode = "auto"

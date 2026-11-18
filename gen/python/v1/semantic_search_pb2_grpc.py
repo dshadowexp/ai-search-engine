@@ -19,16 +19,6 @@ class SemanticSearchServiceStub:
                 request_serializer=v1_dot_semantic__search__pb2.SSearchRequest.SerializeToString,
                 response_deserializer=v1_dot_semantic__search__pb2.SSearchResponse.FromString,
                 _registered_method=True)
-        self.Rerank = channel.unary_unary(
-                '/search.v1.SemanticSearchService/Rerank',
-                request_serializer=v1_dot_semantic__search__pb2.RerankRequest.SerializeToString,
-                response_deserializer=v1_dot_semantic__search__pb2.RerankResponse.FromString,
-                _registered_method=True)
-        self.SummaryStream = channel.unary_stream(
-                '/search.v1.SemanticSearchService/SummaryStream',
-                request_serializer=v1_dot_semantic__search__pb2.SummaryStreamRequest.SerializeToString,
-                response_deserializer=v1_dot_semantic__search__pb2.SummaryStreamResponse.FromString,
-                _registered_method=True)
 
 
 class SemanticSearchServiceServicer:
@@ -41,20 +31,6 @@ class SemanticSearchServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Rerank(self, request, context):
-        """Reranks an existing candidate set for a query.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def SummaryStream(self, request, context):
-        """Streams ranked results as they are produced by the retrieval pipeline.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_SemanticSearchServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -62,16 +38,6 @@ def add_SemanticSearchServiceServicer_to_server(servicer, server):
                     servicer.Search,
                     request_deserializer=v1_dot_semantic__search__pb2.SSearchRequest.FromString,
                     response_serializer=v1_dot_semantic__search__pb2.SSearchResponse.SerializeToString,
-            ),
-            'Rerank': grpc.unary_unary_rpc_method_handler(
-                    servicer.Rerank,
-                    request_deserializer=v1_dot_semantic__search__pb2.RerankRequest.FromString,
-                    response_serializer=v1_dot_semantic__search__pb2.RerankResponse.SerializeToString,
-            ),
-            'SummaryStream': grpc.unary_stream_rpc_method_handler(
-                    servicer.SummaryStream,
-                    request_deserializer=v1_dot_semantic__search__pb2.SummaryStreamRequest.FromString,
-                    response_serializer=v1_dot_semantic__search__pb2.SummaryStreamResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -101,60 +67,6 @@ class SemanticSearchService:
             '/search.v1.SemanticSearchService/Search',
             v1_dot_semantic__search__pb2.SSearchRequest.SerializeToString,
             v1_dot_semantic__search__pb2.SSearchResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def Rerank(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/search.v1.SemanticSearchService/Rerank',
-            v1_dot_semantic__search__pb2.RerankRequest.SerializeToString,
-            v1_dot_semantic__search__pb2.RerankResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def SummaryStream(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/search.v1.SemanticSearchService/SummaryStream',
-            v1_dot_semantic__search__pb2.SummaryStreamRequest.SerializeToString,
-            v1_dot_semantic__search__pb2.SummaryStreamResponse.FromString,
             options,
             channel_credentials,
             insecure,

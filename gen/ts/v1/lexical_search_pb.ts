@@ -4,8 +4,8 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
-import type { SearchHit } from "./common_pb.ts";
-import { file_v1_common } from "./common_pb.ts";
+import type { SearchHit } from "./common_pb";
+import { file_v1_common } from "./common_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**

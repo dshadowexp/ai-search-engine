@@ -4,15 +4,15 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
-import type { SearchHit } from "./common_pb.ts";
-import { file_v1_common } from "./common_pb.ts";
+import type { SearchHit } from "./common_pb";
+import { file_v1_common } from "./common_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file v1/semantic_search.proto.
  */
 export const file_v1_semantic_search: GenFile = /*@__PURE__*/
-  fileDesc("Chh2MS9zZW1hbnRpY19zZWFyY2gucHJvdG8SCXNlYXJjaC52MSKXAQoOU1NlYXJjaFJlcXVlc3QSDQoFcXVlcnkYASABKAkSDQoFdG9wX2sYAiABKA0SNwoHZmlsdGVycxgDIAMoCzImLnNlYXJjaC52MS5TU2VhcmNoUmVxdWVzdC5GaWx0ZXJzRW50cnkaLgoMRmlsdGVyc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiOAoPU1NlYXJjaFJlc3BvbnNlEiUKB3Jlc3VsdHMYASADKAsyFC5zZWFyY2gudjEuU2VhcmNoSGl0IlcKDVJlcmFua1JlcXVlc3QSDQoFcXVlcnkYASABKAkSKAoKY2FuZGlkYXRlcxgCIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQSDQoFdG9wX2sYAyABKA0iNwoOUmVyYW5rUmVzcG9uc2USJQoHcmVzdWx0cxgBIAMoCzIULnNlYXJjaC52MS5TZWFyY2hIaXQiJQoUU3VtbWFyeVN0cmVhbVJlcXVlc3QSDQoFcXVlcnkYASABKAkiKAoVU3VtbWFyeVN0cmVhbVJlc3BvbnNlEg8KB3N1bW1hcnkYASABKAky7QEKFVNlbWFudGljU2VhcmNoU2VydmljZRI/CgZTZWFyY2gSGS5zZWFyY2gudjEuU1NlYXJjaFJlcXVlc3QaGi5zZWFyY2gudjEuU1NlYXJjaFJlc3BvbnNlEj0KBlJlcmFuaxIYLnNlYXJjaC52MS5SZXJhbmtSZXF1ZXN0Ghkuc2VhcmNoLnYxLlJlcmFua1Jlc3BvbnNlElQKDVN1bW1hcnlTdHJlYW0SHy5zZWFyY2gudjEuU3VtbWFyeVN0cmVhbVJlcXVlc3QaIC5zZWFyY2gudjEuU3VtbWFyeVN0cmVhbVJlc3BvbnNlMAFCHFoaY3J1d2wvZ2VuL3NlbWFudGljc2VhcmNodjFiBnByb3RvMw", [file_v1_common]);
+  fileDesc("Chh2MS9zZW1hbnRpY19zZWFyY2gucHJvdG8SCXNlYXJjaC52MSKXAQoOU1NlYXJjaFJlcXVlc3QSDQoFcXVlcnkYASABKAkSDQoFdG9wX2sYAiABKA0SNwoHZmlsdGVycxgDIAMoCzImLnNlYXJjaC52MS5TU2VhcmNoUmVxdWVzdC5GaWx0ZXJzRW50cnkaLgoMRmlsdGVyc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiOAoPU1NlYXJjaFJlc3BvbnNlEiUKB3Jlc3VsdHMYASADKAsyFC5zZWFyY2gudjEuU2VhcmNoSGl0MlgKFVNlbWFudGljU2VhcmNoU2VydmljZRI/CgZTZWFyY2gSGS5zZWFyY2gudjEuU1NlYXJjaFJlcXVlc3QaGi5zZWFyY2gudjEuU1NlYXJjaFJlc3BvbnNlQhxaGmNydXdsL2dlbi9zZW1hbnRpY3NlYXJjaHYxYgZwcm90bzM", [file_v1_common]);
 
 /**
  * @generated from message search.v1.SSearchRequest
@@ -59,84 +59,6 @@ export const SSearchResponseSchema: GenMessage<SSearchResponse> = /*@__PURE__*/
   messageDesc(file_v1_semantic_search, 1);
 
 /**
- * @generated from message search.v1.RerankRequest
- */
-export type RerankRequest = Message<"search.v1.RerankRequest"> & {
-  /**
-   * @generated from field: string query = 1;
-   */
-  query: string;
-
-  /**
-   * @generated from field: repeated search.v1.SearchHit candidates = 2;
-   */
-  candidates: SearchHit[];
-
-  /**
-   * @generated from field: uint32 top_k = 3;
-   */
-  topK: number;
-};
-
-/**
- * Describes the message search.v1.RerankRequest.
- * Use `create(RerankRequestSchema)` to create a new message.
- */
-export const RerankRequestSchema: GenMessage<RerankRequest> = /*@__PURE__*/
-  messageDesc(file_v1_semantic_search, 2);
-
-/**
- * @generated from message search.v1.RerankResponse
- */
-export type RerankResponse = Message<"search.v1.RerankResponse"> & {
-  /**
-   * @generated from field: repeated search.v1.SearchHit results = 1;
-   */
-  results: SearchHit[];
-};
-
-/**
- * Describes the message search.v1.RerankResponse.
- * Use `create(RerankResponseSchema)` to create a new message.
- */
-export const RerankResponseSchema: GenMessage<RerankResponse> = /*@__PURE__*/
-  messageDesc(file_v1_semantic_search, 3);
-
-/**
- * @generated from message search.v1.SummaryStreamRequest
- */
-export type SummaryStreamRequest = Message<"search.v1.SummaryStreamRequest"> & {
-  /**
-   * @generated from field: string query = 1;
-   */
-  query: string;
-};
-
-/**
- * Describes the message search.v1.SummaryStreamRequest.
- * Use `create(SummaryStreamRequestSchema)` to create a new message.
- */
-export const SummaryStreamRequestSchema: GenMessage<SummaryStreamRequest> = /*@__PURE__*/
-  messageDesc(file_v1_semantic_search, 4);
-
-/**
- * @generated from message search.v1.SummaryStreamResponse
- */
-export type SummaryStreamResponse = Message<"search.v1.SummaryStreamResponse"> & {
-  /**
-   * @generated from field: string summary = 1;
-   */
-  summary: string;
-};
-
-/**
- * Describes the message search.v1.SummaryStreamResponse.
- * Use `create(SummaryStreamResponseSchema)` to create a new message.
- */
-export const SummaryStreamResponseSchema: GenMessage<SummaryStreamResponse> = /*@__PURE__*/
-  messageDesc(file_v1_semantic_search, 5);
-
-/**
  * @generated from service search.v1.SemanticSearchService
  */
 export const SemanticSearchService: GenService<{
@@ -149,26 +71,6 @@ export const SemanticSearchService: GenService<{
     methodKind: "unary";
     input: typeof SSearchRequestSchema;
     output: typeof SSearchResponseSchema;
-  },
-  /**
-   * Reranks an existing candidate set for a query.
-   *
-   * @generated from rpc search.v1.SemanticSearchService.Rerank
-   */
-  rerank: {
-    methodKind: "unary";
-    input: typeof RerankRequestSchema;
-    output: typeof RerankResponseSchema;
-  },
-  /**
-   * Streams ranked results as they are produced by the retrieval pipeline.
-   *
-   * @generated from rpc search.v1.SemanticSearchService.SummaryStream
-   */
-  summaryStream: {
-    methodKind: "server_streaming";
-    input: typeof SummaryStreamRequestSchema;
-    output: typeof SummaryStreamResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_v1_semantic_search, 0);

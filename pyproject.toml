@@ -1,14 +1,11 @@
-[project]
-name = "search-ai-root"
-version = "0.1.0"
-requires-python = ">=3.11"
-
 [tool.uv.workspace]
-
 members = [
-    "services/ai",
-    "gen/python"
+    "gen/python",
+    "services/ai"
 ]
 
-[tool.uv.sources]
-shared = { workspace = true }
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.6",
+]
